@@ -23,6 +23,8 @@ int main(int argc, char** argv){
 	}
 	SDL_SetWindowTitle(screen, "bruh");
 
+    SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
+    
 	// Main loop
 	gameLoop(screen, renderer);
 

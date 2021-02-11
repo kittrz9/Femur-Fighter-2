@@ -28,19 +28,19 @@ void drawPlayer(struct entity* ent, SDL_Renderer* renderer){
 	rect.h = ent->size.y;
 
     if(ent->update == updatePlayerDashing) {
+        // Give player blue color while dashing
         SDL_SetTextureColorMod(ent->texture, 150, 150, 255);
         SDL_SetTextureAlphaMod(ent->texture, 200);
     } else if(ent->update == updatePlayerKnockback) {
+        // Give player red color while in knockback
         SDL_SetTextureColorMod(ent->texture, 255, 150, 150);
         SDL_SetTextureAlphaMod(ent->texture, 255);
     } else {
+        // Have the player have normal colors if nothing else changes it's color (Changes it back after it's changed when in other states)
         SDL_SetTextureColorMod(ent->texture, 255, 255, 255);
         SDL_SetTextureAlphaMod(ent->texture, 255);
     }
     SDL_RenderCopyEx(renderer, ent->texture, NULL, &rect, ent->vel.x * 6, NULL, (ent->facingLeft ? SDL_FLIP_HORIZONTAL : SDL_FLIP_NONE));
-    //SDL_RenderCopy(renderer, ent->texture, NULL, &rect);
-	//SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
-	//SDL_RenderDrawRect(renderer, &rect);
 }
 
 bool playerBoundaryCheck(struct entity* ent){
