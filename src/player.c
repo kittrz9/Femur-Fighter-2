@@ -4,19 +4,26 @@
 
 #include "gameLoop.h" // Needed for WIDTH and HEIGHT for now
 
+#include "text.h"
+
 void initializePlayer(struct entity* ent) {
     ent->size.x = 150;
 	ent->size.y = 200;
     ent->vel.x = 0;
     ent->vel.y = 0;
     ent->health = 100;
-    ent->pos.x = (WIDTH/4) - (ent->size.x / 2);
-	ent->pos.y = HEIGHT/2;
+    
 	ent->draw = drawPlayer;
 	ent->update = updatePlayerInAir;
     ent->jumpCounter = 1;
     ent->dashTimer = 0;
     ent->dashCooldown = 0;
+    if(ent->playerNumber){
+        ent->pos.x = (3*WIDTH/4) - (ent->size.x / 2);
+    } else {
+        ent->pos.x = (WIDTH/4) - (ent->size.x / 2);
+	ent->pos.y = HEIGHT/2;
+    }
 }
  
 void drawPlayer(struct entity* ent, SDL_Renderer* renderer){
@@ -34,12 +41,19 @@ void drawPlayer(struct entity* ent, SDL_Renderer* renderer){
         // Give player red color while in knockback
         SDL_SetTextureColorMod(ent->texture, 255, 150, 150);
         SDL_SetTextureAlphaMod(ent->texture, 255);
+    } else if(ent->update == updatePlayerDead){
+        // Give player gray color when dead
+        SDL_SetTextureColorMod(ent->texture, 150, 150, 150);
+        SDL_SetTextureAlphaMod(ent->texture, 255);
     } else {
         // Have the player have normal colors if nothing else changes it's color (Changes it back after it's changed when in other states)
         SDL_SetTextureColorMod(ent->texture, 255, 255, 255);
         SDL_SetTextureAlphaMod(ent->texture, 255);
     }
     SDL_RenderCopyEx(renderer, ent->texture, NULL, &rect, ent->vel.x * 6, NULL, (ent->facingLeft ? SDL_FLIP_HORIZONTAL : SDL_FLIP_NONE));
+    
+    sprintf(formatStr, "%i%%", ent->health);
+    drawTextCentered(renderer, formatStr, SDL_Color_White, ent->pos.x + (ent->size.x / 2), ent->pos.y - 40, ent->size.x / 2, 30);
 }
 
 bool playerBoundaryCheck(struct entity* ent){
@@ -68,9 +82,9 @@ void updatePlayerOnGround(struct entity* ent, double deltaTime){
         ent->vel.x =  1.5;
         ent->facingLeft = false;
     } else if(ent->vel.x > 0.1){
-        ent->vel.x -= 0.001;
+        ent->vel.x -= 0.01 * deltaTime;
     } else if(ent->vel.x < -0.1){
-        ent->vel.x += 0.001;
+        ent->vel.x += 0.01 * deltaTime;
     } else {
         ent->vel.x = 0;
     }
@@ -120,9 +134,9 @@ void updatePlayerInAir(struct entity* ent, double deltaTime){
         ent->vel.x =  1.5;
         ent->facingLeft = false;
     } else if(ent->vel.x > 0.1){
-        ent->vel.x -= 0.001;
+        ent->vel.x -= 0.01 * deltaTime;
     } else if(ent->vel.x < -0.1){
-        ent->vel.x += 0.001;
+        ent->vel.x += 0.01 * deltaTime;
     } else {
         ent->vel.x = 0;
     }
@@ -159,20 +173,16 @@ void updatePlayerDashing(struct entity* ent, double deltaTime){
     
     // Probably really REALLY inneficient to loop through the list like this but I don't want to like pass the other player into the update function just for this right now
     for(struct entListNode* current = entListHead; current != NULL; current = current->next){
-        if(ent != current->ent && current->ent->dashTimer > 0 && checkEntityCollision(ent, current->ent)){
-            ent->knockbackTimer = 0.2;
-            ent->vel.x = -0.5 * (ent->vel.x > 0 ? 1 : -1);
-            ent->vel.y = -2;
-            ent->update = updatePlayerKnockback;
-            ent->dashTimer = 0;
-            ent->dashCooldown = 0.5;
+        if(ent != current->ent && current->ent->update != updatePlayerDead && checkEntityCollision(ent, current->ent)){
+            struct entity* hitPlayer = (ent->dashTimer < current->ent->dashTimer ? ent : current->ent);
+            struct entity* notHitPlayer = (ent->dashTimer > current->ent->dashTimer ? ent : current->ent);
+            givePlayerKnockback(notHitPlayer, 0.5);
+            hitPlayer->vel.x = notHitPlayer->vel.x;
+            givePlayerKnockback(hitPlayer, 0.5);
+            hitPlayer->health -= 5;
             
-            current->ent->knockbackTimer = 0.2;
-            current->ent->vel.x = -0.5 * (current->ent->vel.x > 0 ? 1 : -1);
-            current->ent->vel.y = -2;
-            current->ent->update = updatePlayerKnockback;
-            current->ent->dashTimer = 0;
-            current->ent->dashCooldown = 0.5;
+            if(hitPlayer->health <= 0) {hitPlayer->update = updatePlayerDead; gameState = runGameStateGameOver; gameOverTimer = 4.0;}
+            if(notHitPlayer->health <= 0) {notHitPlayer->update = updatePlayerDead; gameState = runGameStateGameOver; gameOverTimer = 4.0;}
         }
     }
     
@@ -186,12 +196,7 @@ void updatePlayerDashing(struct entity* ent, double deltaTime){
     }
     
     if(playerBoundaryCheck(ent)) {
-        ent->knockbackTimer = 0.2;
-        ent->vel.x = -0.5 * (ent->vel.x > 0 ? 1 : -1);
-        ent->vel.y = -2;
-        ent->update = updatePlayerKnockback;
-        ent->dashTimer = 0;
-        ent->dashCooldown = 0.5;
+        givePlayerKnockback(ent, 0.5);
     }
 }
 
@@ -211,4 +216,29 @@ void updatePlayerKnockback(struct entity* ent, double deltaTime){
     // I forgot to check for the floor but it's only noticable if you fastfall during knockback and I think it's funny so I'm leaving it like this lmao
     
     playerBoundaryCheck(ent);
+}
+
+void updatePlayerDead(struct entity* ent, double deltaTime) {
+    ent->pos.x += ent->vel.x * deltaTime;
+	ent->pos.y += ent->vel.y * deltaTime;
+    
+    #define GRAVITY 0.01
+    ent->vel.y += (GRAVITY * ((keys[DOWN + (ent->playerNumber * UP2)].held * 2)+1)) * deltaTime;
+    
+    if(ent->pos.y > (4*HEIGHT/5 - ent->size.y)+10) {
+        ent->pos.y = 4*HEIGHT/5 - ent->size.y;
+        ent->vel.y = 0;
+    }
+    
+    
+    playerBoundaryCheck(ent);
+}
+
+void givePlayerKnockback(struct entity* ent, float force) {
+    ent->knockbackTimer = 0.2;
+    ent->vel.x = -force * (ent->vel.x >= 0 ? 1 : -1);
+    ent->vel.y = -(fabs(force)*4);
+    ent->update = updatePlayerKnockback;
+    ent->dashTimer = 0;
+    ent->dashCooldown = 0.5;
 }

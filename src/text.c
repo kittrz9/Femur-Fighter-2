@@ -5,7 +5,10 @@
  
 TTF_Font* font;
 
+char* formatStr;
+
 // https://stackoverflow.com/questions/22886500/how-to-render-text-in-sdl2
+// This probably needs to be optimized since the deltatime went from like 0.01 to 0.2 when drawing text
 void drawText(SDL_Renderer* renderer, char* str, SDL_Color col, int x, int y, int w, int h) {
     SDL_Surface* surface = TTF_RenderText_Solid(font, str, col);
     

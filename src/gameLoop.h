@@ -10,6 +10,9 @@ extern int (*gameState)(SDL_Window*, SDL_Renderer*, float);
 
 int runGameStateRunning(SDL_Window* screen, SDL_Renderer* renderer, float deltaTime);
 int runGameStatePaused(SDL_Window* screen, SDL_Renderer* renderer, float deltaTime);
+int runGameStateGameOver(SDL_Window* screen, SDL_Renderer* renderer, float deltaTime);
+
+extern float gameOverTimer;
 
 int gameLoop(SDL_Window* screen, SDL_Renderer* renderer);
 

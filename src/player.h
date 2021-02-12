@@ -14,5 +14,8 @@ void updatePlayerOnGround(struct entity* ent, double deltaTime);
 void updatePlayerInAir(struct entity* ent, double deltaTime);
 void updatePlayerDashing(struct entity* ent, double deltaTime);
 void updatePlayerKnockback(struct entity* ent, double deltaTime);
+void updatePlayerDead(struct entity* ent, double deltaTime);
+
+void givePlayerKnockback(struct entity* ent, float force);
 
 #endif
