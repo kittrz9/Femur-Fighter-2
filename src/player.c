@@ -22,8 +22,8 @@ void initializePlayer(struct entity* ent) {
         ent->pos.x = (3*WIDTH/4) - (ent->size.x / 2);
     } else {
         ent->pos.x = (WIDTH/4) - (ent->size.x / 2);
-	ent->pos.y = HEIGHT/2;
     }
+    ent->pos.y = HEIGHT/2;
 }
  
 void drawPlayer(struct entity* ent, SDL_Renderer* renderer){

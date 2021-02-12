@@ -24,8 +24,8 @@ int gameLoop(SDL_Window* screen, SDL_Renderer* renderer) {
     
 	// Create entities
 	struct entity* player1 = malloc(sizeof(struct entity));
-    initializePlayer(player1);
     player1->playerNumber = 0;
+    initializePlayer(player1);
     
     SDL_Surface* temp = NULL; // Temporary
     temp = SDL_LoadBMP("./res/sansGriffin.bmp");
@@ -35,9 +35,8 @@ int gameLoop(SDL_Window* screen, SDL_Renderer* renderer) {
 	pushToEntityList(player1);
     
     struct entity* player2 = malloc(sizeof(struct entity));
-    initializePlayer(player2);
-	player2->pos.x = (3*WIDTH/4) - (player2->size.x / 2);
     player2->playerNumber = 1;
+    initializePlayer(player2);
     
     temp = SDL_LoadBMP("./res/skeleman.bmp");
     player2->texture = SDL_CreateTextureFromSurface(renderer, temp);
