@@ -13,16 +13,16 @@ typedef struct {
 // Doesnt really affect this thing since the only entities (so far) are just the players
 struct entity {
 	vec2f pos, size, vel;
-    
+	
 	SDL_Texture* texture;
 	int jumpCounter;
 	bool facingLeft; // Lmao this is a stupid way to draw flippped characters
 	int playerNumber;
-    int health;
-    float dashTimer;
-    float dashCooldown;
-    float knockbackTimer;
-    
+	int health;
+	float dashTimer;
+	float dashCooldown;
+	float knockbackTimer;
+	
 	void (*draw)(struct entity*, SDL_Renderer*);
 	void (*update)(struct entity*, double);
 };

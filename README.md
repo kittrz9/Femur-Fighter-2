@@ -31,12 +31,15 @@ I havent tested it on anything other than just my own computer with Linux so I c
 ## Things I should probably add
 `Sound`<br>
 `Timer`<br>
+`More attacks than just dashing`<br>
 `Optimizing stuff`<br>
 `Controls configuration`<br>
 `Just a way to configure stuff in general`<br>
 `Alternate costumes/characters?`<br>
 `Better art`<br>
+`Better controls`<br>
 `Main menu`<br>
 `An actual pause menu that doesn't just say "bruh"`<br>
+`Controller support`<br>
 `Online multiplayer (Never gonna happen)`<br>
 `Make the game actually good (NEVER gonna happen)`<br>
