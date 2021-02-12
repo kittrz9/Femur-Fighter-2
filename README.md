@@ -38,6 +38,7 @@ I havent tested it on anything other than just my own computer with Linux so I c
 `Alternate costumes/characters?`<br>
 `Better art`<br>
 `Better controls`<br>
+`Make the menus look good`<br>
 `Music`<br>
 `Controller support`<br>
 `Online multiplayer (Never gonna happen)`<br>

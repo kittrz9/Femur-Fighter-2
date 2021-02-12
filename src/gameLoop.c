@@ -98,6 +98,7 @@ struct menuItem{
 };
 void mainMenuStart(){
 	gameState = runGameStateRunning;
+	menuIndex = 0;
 	return;
 }
 // This is VERY stupid
@@ -193,9 +194,15 @@ void pauseMenuResume(){
 	gameState = runGameStateRunning;
 	return;
 }
+void pauseMenuToMainMenu(){
+	gameState = runGameStateMainMenu;
+	menuIndex = 0;
+	return;
+}
 struct menuItem pauseMenu[] = {
 	{"RESUME", pauseMenuResume, WIDTH/2, 6*HEIGHT/10, 200, 50},
-	{"EXIT", mainMenuExit, WIDTH/2, 7*HEIGHT/10, 175, 50}
+	{"MAIN MENU", pauseMenuToMainMenu, WIDTH/2, 7*HEIGHT/10, 300, 50},
+	{"EXIT", mainMenuExit, WIDTH/2, 8*HEIGHT/10, 175, 50}
 };
 
 int runGameStatePaused(SDL_Window* screen, SDL_Renderer* renderer, float deltaTime){
@@ -216,7 +223,7 @@ int runGameStatePaused(SDL_Window* screen, SDL_Renderer* renderer, float deltaTi
 	if(keys[UP].pressedTimer > 0.1 && menuIndex > 0){
 		menuIndex--;
 	}
-	if(keys[DOWN].pressedTimer > 0.1 && menuIndex < sizeof(mainMenu)/sizeof(struct menuItem)-1){
+	if(keys[DOWN].pressedTimer > 0.1 && menuIndex < sizeof(pauseMenu)/sizeof(struct menuItem)-1){
 		menuIndex++;
 	}
 	if(keys[MENU_CONFIRM].pressedTimer > 0.1){
@@ -244,7 +251,7 @@ int runGameStatePaused(SDL_Window* screen, SDL_Renderer* renderer, float deltaTi
 	rect.h = HEIGHT;
 	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 200);
 	SDL_RenderFillRect(renderer, &rect);
-	for(int i = 0; i < sizeof(mainMenu)/sizeof(struct menuItem); i++){
+	for(int i = 0; i < sizeof(pauseMenu)/sizeof(struct menuItem); i++){
 		sprintf(formatStr, "%s%s", (i == menuIndex ? ">" : ""), pauseMenu[i].str);
 		drawTextCentered(renderer, formatStr, SDL_Color_White, pauseMenu[i].pos.x, pauseMenu[i].pos.y, pauseMenu[i].size.x, pauseMenu[i].size.y);
 	}
