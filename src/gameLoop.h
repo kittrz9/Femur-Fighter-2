@@ -3,8 +3,8 @@
 
 #include <SDL2/SDL.h>
 
-//enum gameStates {RUNNING, PAUSED};
-//gameStates gameState;
+#define WIDTH 1600
+#define HEIGHT 900
 
 extern int (*gameState)(SDL_Window*, SDL_Renderer*, float);
 

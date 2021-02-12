@@ -2,8 +2,7 @@
 
 #include <stdlib.h>
 
-#define WIDTH 1600
-#define HEIGHT 900
+#include "gameLoop.h" // Needed for WIDTH and HEIGHT for now
 
 void initializePlayer(struct entity* ent) {
     ent->size.x = 150;

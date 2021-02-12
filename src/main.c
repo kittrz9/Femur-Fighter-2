@@ -1,16 +1,22 @@
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_ttf.h>
 
 #include <stdbool.h>
 #include <stdio.h>
 
 #include "gameLoop.h"
 
-#define WIDTH 1600
-#define HEIGHT 900
+#include "text.h"
 
 int main(int argc, char** argv){
 	SDL_Init(SDL_INIT_EVERYTHING);
+    TTF_Init();
 
+    // Setting the font size to 200 is probably very dumb, but I don't think SDL_ttf has a way to change font size after it's been opened
+    font = TTF_OpenFont("res/TerminusTTF-4.47.0.ttf", 200);
+    
+    SDL_LogSetAllPriority(SDL_LOG_PRIORITY_WARN);
+    
 	// Window stuff
 	SDL_Window* screen = NULL;
 	SDL_Renderer* renderer = NULL;

@@ -1,6 +1,6 @@
 CC = gcc
 SHELL = /bin/bash
-LIBS = -lSDL2 -lSDLmain
+LIBS = -lSDL2 -lSDLmain -lSDL2_ttf
 CFLAGS = -Wall -O2
 NAME = SDL-thing
 SOURCES = ${wildcard src/*.c}
