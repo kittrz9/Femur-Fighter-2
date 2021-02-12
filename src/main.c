@@ -12,7 +12,6 @@ int main(int argc, char** argv){
 	SDL_Init(SDL_INIT_EVERYTHING);
 	TTF_Init();
 	
-	// Setting the font size to 200 is probably very dumb, but I don't think SDL_ttf has a way to change font size after it's been opened
 	font = TTF_OpenFont("res/TerminusTTF-4.47.0.ttf", 24);
 	
 	formatStr = malloc(MAX_STR_LEN);

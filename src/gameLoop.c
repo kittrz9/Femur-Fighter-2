@@ -9,12 +9,13 @@
 #include "text.h"
 
 // This has to be here because of weird extern stuff
-int (*gameState)(SDL_Window*, SDL_Renderer*, float) = runGameStateRunning;
+int (*gameState)(SDL_Window*, SDL_Renderer*, float) = runGameStateMainMenu;
 
 float gameOverTimer;
 
+bool running = true;
+
 int gameLoop(SDL_Window* screen, SDL_Renderer* renderer) {
-	bool running = true;
 	SDL_Event event;
 	unsigned int lastTime = 0, currentTime = SDL_GetPerformanceCounter();
 	double deltaTime = 0;
@@ -74,7 +75,6 @@ int gameLoop(SDL_Window* screen, SDL_Renderer* renderer) {
 			}
 		}
 		// Do stuff
-		//if(runGameStateRunning(screen, renderer, deltaTime)) {running = false;}
 		if((*gameState)(screen, renderer, deltaTime)) {running = false;}
 	
 		// Deltatime stuff
@@ -90,6 +90,59 @@ int gameLoop(SDL_Window* screen, SDL_Renderer* renderer) {
 	return 0;
 }
 
+int menuIndex = 0; // Index to what menu item is pointed to in either the main menu or pause menu
+struct menuItem{
+	char* str;
+	void (*func)();
+	vec2f pos, size;
+};
+void mainMenuStart(){
+	gameState = runGameStateRunning;
+	return;
+}
+// This is VERY stupid
+void mainMenuExit(){
+	running = false;
+	return;
+}
+
+struct menuItem mainMenu[] = {
+	{"START", mainMenuStart, WIDTH/2, 4*HEIGHT/6, 200, 100},
+	{"EXIT", mainMenuExit, WIDTH/2, 5*HEIGHT/6, 175, 100}
+};
+int runGameStateMainMenu(SDL_Window* screen, SDL_Renderer* renderer, float deltaTime){
+	
+	// Clear the screen/renderer
+	SDL_SetRenderDrawColor(renderer,0,0,0,255);
+	SDL_RenderClear(renderer);
+	
+	drawTextCentered(renderer, "FEMUR FIGHTER 2", SDL_Color_White, WIDTH/2, HEIGHT/3, 400,150);
+	for(int i = 0; i < sizeof(mainMenu)/sizeof(struct menuItem); i++){
+		sprintf(formatStr, "%s%s", (i == menuIndex ? ">" : ""), mainMenu[i].str);
+		drawTextCentered(renderer, formatStr, SDL_Color_White, mainMenu[i].pos.x, mainMenu[i].pos.y, mainMenu[i].size.x, mainMenu[i].size.y);
+	}
+	
+	if(keys[UP].pressedTimer > 0.1 && menuIndex > 0){
+		menuIndex--;
+	}
+	if(keys[DOWN].pressedTimer > 0.1 && menuIndex < sizeof(mainMenu)/sizeof(struct menuItem)-1){
+		menuIndex++;
+	}
+	if(keys[MENU_CONFIRM].pressedTimer > 0.1){
+		(*mainMenu[menuIndex].func)();
+	}
+	
+	// Decrement the pressed timer for each key if they're being pressed
+	for(int i = 0; i < CONTROLS_LENGTH; i++){
+		if(keys[i].pressedTimer > 0.0) {
+			keys[i].pressedTimer -= deltaTime;
+		}
+	}
+	
+	// Render everything to the screen
+	SDL_RenderPresent(renderer);
+	return 0;
+}
 
 int runGameStateRunning(SDL_Window* screen, SDL_Renderer* renderer, float deltaTime){
 	// Floor rectangle
@@ -136,6 +189,15 @@ int runGameStateRunning(SDL_Window* screen, SDL_Renderer* renderer, float deltaT
 	return 0;
 }
 
+void pauseMenuResume(){
+	gameState = runGameStateRunning;
+	return;
+}
+struct menuItem pauseMenu[] = {
+	{"RESUME", pauseMenuResume, WIDTH/2, 6*HEIGHT/10, 200, 50},
+	{"EXIT", mainMenuExit, WIDTH/2, 7*HEIGHT/10, 175, 50}
+};
+
 int runGameStatePaused(SDL_Window* screen, SDL_Renderer* renderer, float deltaTime){
 	SDL_Rect rect;
 	
@@ -150,6 +212,16 @@ int runGameStatePaused(SDL_Window* screen, SDL_Renderer* renderer, float deltaTi
 	// Clear the screen/renderer
 	SDL_SetRenderDrawColor(renderer,0,0,0,255);
 	SDL_RenderClear(renderer);
+	
+	if(keys[UP].pressedTimer > 0.1 && menuIndex > 0){
+		menuIndex--;
+	}
+	if(keys[DOWN].pressedTimer > 0.1 && menuIndex < sizeof(mainMenu)/sizeof(struct menuItem)-1){
+		menuIndex++;
+	}
+	if(keys[MENU_CONFIRM].pressedTimer > 0.1){
+		(*pauseMenu[menuIndex].func)();
+	}
 	
 	// Draw the floor
 	rect.x = 0;
@@ -172,6 +244,10 @@ int runGameStatePaused(SDL_Window* screen, SDL_Renderer* renderer, float deltaTi
 	rect.h = HEIGHT;
 	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 200);
 	SDL_RenderFillRect(renderer, &rect);
+	for(int i = 0; i < sizeof(mainMenu)/sizeof(struct menuItem); i++){
+		sprintf(formatStr, "%s%s", (i == menuIndex ? ">" : ""), pauseMenu[i].str);
+		drawTextCentered(renderer, formatStr, SDL_Color_White, pauseMenu[i].pos.x, pauseMenu[i].pos.y, pauseMenu[i].size.x, pauseMenu[i].size.y);
+	}
 	
 	//SDL_Color SDL_Color_White = {255, 255, 255}; // This is dumb
 	drawTextCentered(renderer, "bruh", SDL_Color_White, WIDTH/2, HEIGHT/2, 80, 40);

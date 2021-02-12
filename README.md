@@ -38,8 +38,7 @@ I havent tested it on anything other than just my own computer with Linux so I c
 `Alternate costumes/characters?`<br>
 `Better art`<br>
 `Better controls`<br>
-`Main menu`<br>
-`An actual pause menu that doesn't just say "bruh"`<br>
+`Music`<br>
 `Controller support`<br>
 `Online multiplayer (Never gonna happen)`<br>
 `Make the game actually good (NEVER gonna happen)`<br>

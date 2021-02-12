@@ -12,6 +12,7 @@ void initControls() {
 	keys[DASH_LEFT].keycode = SDLK_q;
 	keys[DASH_RIGHT].keycode = SDLK_e;
 	keys[PAUSE].keycode = SDLK_ESCAPE;
+	keys[MENU_CONFIRM].keycode = SDLK_RETURN;
 	
 	keys[UP2].keycode = SDLK_KP_8;
 	keys[DOWN2].keycode = SDLK_KP_5;
