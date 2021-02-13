@@ -4,6 +4,9 @@ A remake (sequel?) of the dumb fighting game I made as a joke in 2019 (https://g
 Yes I know everything about this is trash
 
 ## Controls
+Pause: Escape
+Confirm in menus: Enter
+
 <b>Player 1:<br></b>
 Left: A<br>
 Right: D<br>

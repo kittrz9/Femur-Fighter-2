@@ -5,7 +5,7 @@
 #include <stdio.h>
 
 #include "gameLoop.h"
-
+#include "types.h"
 #include "text.h"
 
 int main(int argc, char** argv){

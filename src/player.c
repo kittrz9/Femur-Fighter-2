@@ -3,6 +3,8 @@
 #include <stdlib.h>
 
 #include "gameLoop.h" // Needed for WIDTH and HEIGHT for now
+#include "types.h"
+#include "gameStates.h"
 
 #include "text.h"
 

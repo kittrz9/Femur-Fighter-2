@@ -3,10 +3,7 @@
 
 #include <SDL2/SDL.h>
 #include <stdbool.h>
-
-typedef struct {
-	float x, y;
-} vec2f;
+#include "types.h"
 
 // Really need to find a way to have like specific entities/entity types have their own variables
 // so not everything has it's own like jump counter lmao
