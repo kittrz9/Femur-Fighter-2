@@ -4,8 +4,8 @@ A remake (sequel?) of the dumb fighting game I made as a joke in 2019 (https://g
 Yes I know everything about this is trash
 
 ## Controls
-Pause: Escape
-Confirm in menus: Enter
+Pause: Escape<br>
+Confirm in menus: Enter<br>
 
 <b>Player 1:<br></b>
 Left: A<br>
@@ -36,8 +36,7 @@ I havent tested it on anything other than just my own computer with Linux so I c
 `Timer`<br>
 `More attacks than just dashing`<br>
 `Optimizing stuff`<br>
-`Controls configuration`<br>
-`Just a way to configure stuff in general`<br>
+`Fix the game crashing after creating the config file (Works if config file is there so running the game twice works)`<br>
 `Alternate costumes/characters?`<br>
 `Better art`<br>
 `Better controls`<br>

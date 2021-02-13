@@ -4,7 +4,6 @@
 #include <SDL2/SDL.h>
 #include <stdbool.h>
 
-// This has to be here because of weird extern stuff
 extern int (*gameState)(SDL_Window*, SDL_Renderer*, float);
 extern bool running;
 

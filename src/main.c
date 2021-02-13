@@ -7,6 +7,7 @@
 #include "gameLoop.h"
 #include "types.h"
 #include "text.h"
+#include "config.h"
 
 int main(int argc, char** argv){
 	SDL_Init(SDL_INIT_EVERYTHING);
@@ -31,6 +32,10 @@ int main(int argc, char** argv){
 	SDL_SetWindowTitle(screen, "bruh");
 	
 	SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
+	
+	// Get the config file loaded
+	getConfigFile();
+	printf("config at %s\n", configPath);
 	
 	// Main loop
 	gameLoop(screen, renderer);
