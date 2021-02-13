@@ -23,7 +23,7 @@ Fastfall: Numpad 5<br>
 Dash left: Numpad 7<br>
 Dash right: Numpad 9<br>
 
-Hopefully eventually I might make controls configurable in a config file or the game but as of now you would need to recompile the game to change them
+Controls are configurable in the config file (~/.local/share/kittrz/FemurFighter2/config.txt for Linux, idk for anything else because I havnet tested it on anything else but it prints the path to the console when launching from the commandline)
 
 ## Compiling
 You should just be able to install SDL2 (Using either the download at https://libsdl.org/download-2.0.php if you're on Windows or just whatever package manager you use in Linux) and run the makefile
@@ -36,10 +36,12 @@ I havent tested it on anything other than just my own computer with Linux so I c
 `Timer`<br>
 `More attacks than just dashing`<br>
 `Optimizing stuff`<br>
-`Fix the game crashing after creating the config file (Works if config file is there so running the game twice works)`<br>
 `Alternate costumes/characters?`<br>
 `Better art`<br>
 `Better controls`<br>
+`Being able to change resolution`<br>
+`Being able to change controls in game`<br>
+`Fix menu confirm sometimes not being assigned a control from the config file`<br>
 `Make the menus look good`<br>
 `Music`<br>
 `Controller support`<br>

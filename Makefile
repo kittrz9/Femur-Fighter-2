@@ -1,8 +1,8 @@
 CC = gcc
 SHELL = /bin/bash
-LIBS = -lSDL2 -lSDLmain -lSDL2_ttf
+LIBS = -lSDL2 -lSDLmain -lSDL2_ttf -lSDL2_image
 CFLAGS = -Wall -O2
-NAME = SDL-thing
+NAME = FemurFighter2
 SOURCES = ${wildcard src/gameStates/*.c} ${wildcard src/*.c}
 
 ${NAME}: ${SOURCES}

@@ -1,4 +1,5 @@
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_image.h>
 #include <stdbool.h>
 
 #include "gameLoop.h"
@@ -24,7 +25,7 @@ int gameLoop(SDL_Window* screen, SDL_Renderer* renderer) {
 	player1->playerNumber = 0;
 	
 	SDL_Surface* temp = NULL; // Temporary
-	temp = SDL_LoadBMP("./res/sansGriffin.bmp");
+	temp = IMG_Load("res/sansGriffin.png");
 	player1->texture = SDL_CreateTextureFromSurface(renderer, temp);
 	SDL_FreeSurface(temp);
 	
@@ -33,7 +34,7 @@ int gameLoop(SDL_Window* screen, SDL_Renderer* renderer) {
 	struct entity* player2 = malloc(sizeof(struct entity));
 	player2->playerNumber = 1;
 	
-	temp = SDL_LoadBMP("./res/skeleman.bmp");
+	temp = IMG_Load("./res/skeleman.bmp");
 	player2->texture = SDL_CreateTextureFromSurface(renderer, temp);
 	SDL_FreeSurface(temp);
 	
