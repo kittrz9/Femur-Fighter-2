@@ -19,8 +19,10 @@ void getConfigFile(){
 	if(rw == NULL){
 		printf("Couldn't open config file: %s\nWill try to create config file\n", SDL_GetError());
 		initConfigFile();
-		SDL_RWclose(rw);
 		rw = SDL_RWFromFile(configPath, "r");
+		if(rw == NULL){
+			printf("%s\n", SDL_GetError());
+		}
 	}
 	config = malloc(sizeof(char) * MAX_CONFIG_LENGTH);
 	SDL_RWread(rw, config, MAX_CONFIG_LENGTH, 1);

@@ -25,11 +25,9 @@ void initControls() {
 	
 	SDL_Keycode* controlPointer;
 	
-	for(int i = 0; /*0strcmp(lines[i], "")*/i < linesCount; i++){
-		//printf("%s\n", lines[i]);
+	for(int i = 0; i < linesCount; i++){
 		controlName = strtok(lines[i], delim2);
 		keyName = strtok(NULL, delim2);
-		printf("%s   %s\n", controlName, keyName);
 		// This is probably a very VERY stupid way of making this work but switch statements with strings dont work in C
 		if(strcmp(controlName, "Left") == 0) {
 			controlPointer = &keys[LEFT].keycode;
@@ -65,12 +63,8 @@ void initControls() {
 			printf("Invalid control name in config file: %s\n", controlName);
 			break;
 		}
-		printf("%i\n", SDL_GetKeyFromName(keyName));
 		*controlPointer = SDL_GetKeyFromName(keyName);
-		printf("%i\n", *controlPointer);
 	}
-	
-	printf("%i\n", keys[MENU_CONFIRM].keycode);
 	
 	// Also I guess I need this because it isn't always just initialized to false
 	for(int i = 0; i < CONTROLS_LENGTH; i++){
