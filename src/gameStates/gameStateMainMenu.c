@@ -1,6 +1,7 @@
 #include "gameStateMainMenu.h"
 
 #include "gameStateRunning.h"
+#include "gameStateControlsMenu.h"
 
 #include "menu.h"
 #include "../controls.h"
@@ -23,9 +24,19 @@ void mainMenuExit(){
 	return;
 }
 
+void mainMenuToControlsMenu(){
+	gameState = runGameStateControlsMenu;
+	menuIndex = 0;
+	for(entListCurrent = entListHead; entListCurrent != NULL; entListCurrent = entListCurrent->next){
+		initializePlayer(entListCurrent->ent);
+	}
+	return;
+}
+
 struct menuItem mainMenu[] = {
-	{"START", mainMenuStart, WIDTH/2, 4*HEIGHT/6, 200, 100},
-	{"EXIT", mainMenuExit, WIDTH/2, 5*HEIGHT/6, 175, 100}
+	{"START", mainMenuStart, WIDTH/2, 5*HEIGHT/8, 200, 100},
+	{"CONTROLS", mainMenuToControlsMenu, WIDTH/2, 6*HEIGHT/8, 250, 100},
+	{"EXIT", mainMenuExit, WIDTH/2, 7*HEIGHT/8, 175, 100}
 };
 int runGameStateMainMenu(SDL_Window* screen, SDL_Renderer* renderer, float deltaTime){
 	

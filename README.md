@@ -40,10 +40,12 @@ I havent tested it on anything other than just my own computer with Linux so I c
 `Better art`<br>
 `Better controls`<br>
 `Being able to change resolution`<br>
-`Being able to change controls in game`<br>
 `Fix menu confirm sometimes not being assigned a control from the config file`<br>
+`Move header files into an include directory`<br>
+`Maybe start using CMake instead of just regular make files`<br>
 `Make the menus look good`<br>
 `Music`<br>
 `Controller support`<br>
+`Include images in the executable so you dont need the res folder`<br>
 `Online multiplayer (Never gonna happen)`<br>
 `Make the game actually good (NEVER gonna happen)`<br>

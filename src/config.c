@@ -3,13 +3,10 @@
 #define MAX_CONFIG_PATH_LENGTH 256
 #define MAX_CONFIG_LENGTH 2048
 
+#include "controls.h"
+
 char* configPath;
 char* config;
-
-/*
- * Game crashes when trying to create the config file but it's still created and initialized
- * Still needs to be fixed
- */
 
 void getConfigFile(){
 	configPath = malloc(sizeof(char) * MAX_CONFIG_PATH_LENGTH);
@@ -42,10 +39,24 @@ void initConfigFile(){
 }
 
 void saveConfigFile(){
+	printf("Saving config file\n");
 	SDL_RWops* rw = SDL_RWFromFile(configPath, "w");
 	
-	if(SDL_RWwrite(rw, config, 1, strlen(config)) != strlen(config)){
+	char* str = malloc(MAX_CONFIG_LENGTH);
+	str[0] = '\0';
+	char* temp = malloc(50);
+	for(int i = 0; i < CONTROLS_LENGTH; i++){
+		sprintf(temp, "%s:%s\n", keys[i].name, SDL_GetKeyName(keys[i].keycode));
+		strcat(str, temp);
+	}
+	free(temp);
+	printf("%s\n", str);
+	
+	size_t len = SDL_strlen(str);
+	printf("%i\n", len);
+	if(SDL_RWwrite(rw, str, 1, len) != len){
 		printf("Couldn't write to config file: %s\n", SDL_GetError());
 	}
 	SDL_RWclose(rw);
+	free(str);
 }

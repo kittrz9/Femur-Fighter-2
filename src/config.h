@@ -9,5 +9,6 @@ extern char* config;
 
 void getConfigFile();
 void initConfigFile();
+void saveConfigFile();
 
 #endif

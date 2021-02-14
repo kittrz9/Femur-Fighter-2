@@ -1,8 +1,6 @@
 #ifndef GAMESTATEMAINMENU_H
 #define GAMESTATEMAINMENU_H
 
-#include "menu.h"
-
 #include <SDL2/SDL.h>
 
 void mainMenuStart();

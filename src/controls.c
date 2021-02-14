@@ -6,6 +6,23 @@
 key keys[CONTROLS_LENGTH]; 
 
 void initControls() {
+	// There's probably a better way to do this
+	keys[LEFT].name = "Left";
+	keys[RIGHT].name = "Right";
+	keys[UP].name = "Up";
+	keys[DOWN].name = "Down";
+	keys[DASH_LEFT].name = "DashL";
+	keys[DASH_RIGHT].name = "DashR";
+	keys[LEFT2].name = "Left2";
+	keys[RIGHT2].name = "Right2";
+	keys[UP2].name = "Up2";
+	keys[DOWN2].name = "Down2";
+	keys[DASH_LEFT2].name = "DashL2";
+	keys[DASH_RIGHT2].name = "DashR2";
+	keys[EXIT].name = "Exit";
+	keys[PAUSE].name = "Pause";
+	keys[MENU_CONFIRM].name = "MenuConfirm";
+	
 	// Getting this to work was hell
 	// Split config file by lines
 	const char* delim = "\n\0";
@@ -28,40 +45,11 @@ void initControls() {
 	for(int i = 0; i < linesCount; i++){
 		controlName = strtok(lines[i], delim2);
 		keyName = strtok(NULL, delim2);
-		// This is probably a very VERY stupid way of making this work but switch statements with strings dont work in C
-		if(strcmp(controlName, "Left") == 0) {
-			controlPointer = &keys[LEFT].keycode;
-		} else if (strcmp(controlName, "Right") == 0) {
-			controlPointer = &keys[RIGHT].keycode;
-		} else if (strcmp(controlName, "Up") == 0) {
-			controlPointer = &keys[UP].keycode;
-		} else if (strcmp(controlName, "Down") == 0) {
-			controlPointer = &keys[DOWN].keycode;
-		} else if (strcmp(controlName, "DashL") == 0) {
-			controlPointer = &keys[DASH_LEFT].keycode;
-		} else if (strcmp(controlName, "DashR") == 0) {
-			controlPointer = &keys[DASH_RIGHT].keycode;
-		} else if(strcmp(controlName, "Left2") == 0) {
-			controlPointer = &keys[LEFT2].keycode;
-		} else if (strcmp(controlName, "Right2") == 0) {
-			controlPointer = &keys[RIGHT2].keycode;
-		} else if (strcmp(controlName, "Up2") == 0) {
-			controlPointer = &keys[UP2].keycode;
-		} else if (strcmp(controlName, "Down2") == 0) {
-			controlPointer = &keys[DOWN2].keycode;
-		} else if (strcmp(controlName, "DashL2") == 0) {
-			controlPointer = &keys[DASH_LEFT2].keycode;
-		} else if (strcmp(controlName, "DashR2") == 0) {
-			controlPointer = &keys[DASH_RIGHT2].keycode;
-		} else if (strcmp(controlName, "Pause") == 0) {
-			controlPointer = &keys[PAUSE].keycode;
-		} else if (strcmp(controlName, "MenuConfirm") == 0) {
-			controlPointer = &keys[MENU_CONFIRM].keycode;
-		} else if (strcmp(controlName, "Exit") == 0) {
-			controlPointer = &keys[EXIT].keycode;
-		} else {
-			printf("Invalid control name in config file: %s\n", controlName);
-			break;
+		for(int i = 0; i < CONTROLS_LENGTH; i++){
+			if(strcmp(controlName, keys[i].name) == 0){
+				controlPointer = &keys[i].keycode;
+				break;
+			}
 		}
 		*controlPointer = SDL_GetKeyFromName(keyName);
 	}

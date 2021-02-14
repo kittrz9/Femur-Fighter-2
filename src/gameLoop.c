@@ -9,7 +9,6 @@
 
 #include "text.h"
 
-#include "gameStates/menu.h"
 #include "gameStates.h"
 
 int gameLoop(SDL_Window* screen, SDL_Renderer* renderer) {
