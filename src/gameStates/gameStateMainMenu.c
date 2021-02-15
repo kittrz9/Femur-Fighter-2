@@ -3,7 +3,7 @@
 #include "gameStateRunning.h"
 #include "gameStateControlsMenu.h"
 
-#include "menu.h"
+#include "../menu.h"
 #include "../controls.h"
 #include "../gameStates.h"
 #include "../entity.h"

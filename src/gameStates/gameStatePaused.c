@@ -1,7 +1,7 @@
 #include "gameStatePaused.h"
 
 #include "../gameStates.h"
-#include "menu.h"
+#include "../menu.h"
 #include "../text.h"
 #include "../controls.h"
 #include "../entity.h"

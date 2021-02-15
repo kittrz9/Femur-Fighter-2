@@ -53,7 +53,7 @@ void saveConfigFile(){
 	printf("%s\n", str);
 	
 	size_t len = SDL_strlen(str);
-	printf("%i\n", len);
+	printf("%li\n", len);
 	if(SDL_RWwrite(rw, str, 1, len) != len){
 		printf("Couldn't write to config file: %s\n", SDL_GetError());
 	}

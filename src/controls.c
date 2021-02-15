@@ -51,7 +51,10 @@ void initControls() {
 				break;
 			}
 		}
-		*controlPointer = SDL_GetKeyFromName(keyName);
+		if(controlPointer != NULL) {
+			*controlPointer = SDL_GetKeyFromName(keyName);
+		}
+		controlPointer = NULL;
 	}
 	
 	// Also I guess I need this because it isn't always just initialized to false

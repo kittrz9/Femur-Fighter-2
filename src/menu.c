@@ -1,4 +1,4 @@
 #include "menu.h"
 
 // Needed because extern is weird
-int menuIndex = 0;
+unsigned int menuIndex = 0;

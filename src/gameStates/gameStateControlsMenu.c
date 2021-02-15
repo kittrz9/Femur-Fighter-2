@@ -2,13 +2,11 @@
 
 #include "gameStatePaused.h"
 
-#include "menu.h"
+#include "../menu.h"
 #include "../controls.h"
 #include "../gameStates.h"
 #include "../text.h"
 #include "../config.h"
-
-// enum CONTROLS{UP, DOWN, LEFT, RIGHT, DASH_LEFT, DASH_RIGHT, UP2, DOWN2, LEFT2, RIGHT2, DASH_LEFT2, DASH_RIGHT2, EXIT, PAUSE, MENU_CONFIRM, CONTROLS_LENGTH};
 
 void changeControl();
 void controlsMenuBack(){
