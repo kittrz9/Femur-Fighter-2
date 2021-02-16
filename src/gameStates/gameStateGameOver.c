@@ -36,13 +36,6 @@ int runGameStateGameOver(SDL_Window* screen, SDL_Renderer* renderer, float delta
 		(*entListCurrent->ent->update)(entListCurrent->ent, deltaTime/4);
 	}
 	
-	// Decrement the pressed timer for each key if they're being pressed
-	for(int i = 0; i < CONTROLS_LENGTH; i++){
-		if(keys[i].pressedTimer > 0.0) {
-			keys[i].pressedTimer -= deltaTime;
-		}
-	}
-	
 	gameOverTimer -= deltaTime * 0.001;
 	
 	if(gameOverTimer <= 0){

@@ -6,6 +6,18 @@
 #include "entity.h"
 #include "controls.h"
 
+struct playerStruct{
+	struct entity* ent; // For the entity related stuff like position
+	
+	int jumpCounter;
+	bool facingLeft; // Lmao this is a stupid way to draw flippped characters
+	int playerNumber;
+	int health;
+	float dashTimer;
+	float dashCooldown;
+	float knockbackTimer;
+};
+
 void initializePlayer(struct entity* ent);
 
 void drawPlayer(struct entity* ent, SDL_Renderer* renderer);

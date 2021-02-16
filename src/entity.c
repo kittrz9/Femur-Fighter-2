@@ -44,6 +44,7 @@ void removeFromEntityList(struct entity* ent){
     struct entListNode* temp;
 	for(entListCurrent = entListHead; entListCurrent != NULL;){
         if(entListHead == entListTail){
+			free(entListHead->ent->object);
             free(entListHead);
             return;
         }
@@ -55,6 +56,7 @@ void removeFromEntityList(struct entity* ent){
             if(entListCurrent == entListTail) {
                 entListTail= entListTail->prev;
             }
+            free(entListCurrent->ent->object);
 			free(entListCurrent);
             entListCurrent = temp;
 			return;

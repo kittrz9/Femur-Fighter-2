@@ -37,13 +37,6 @@ int runGameStateRunning(SDL_Window* screen, SDL_Renderer* renderer, float deltaT
 		(*entListCurrent->ent->update)(entListCurrent->ent, deltaTime);
 	}
 	
-	// Decrement the pressed timer for each key if they're being pressed
-	for(int i = 0; i < CONTROLS_LENGTH; i++){
-		if(keys[i].pressedTimer > 0.0) {
-			keys[i].pressedTimer -= deltaTime;
-		}
-	}
-	
 	// Render everything to the screen
 	SDL_RenderPresent(renderer);
 	

@@ -21,9 +21,10 @@ int gameLoop(SDL_Window* screen, SDL_Renderer* renderer) {
 	
 	// Create entities
 	struct entity* player1 = malloc(sizeof(struct entity));
-	player1->playerNumber = 0;
+	player1->object = malloc(sizeof(struct playerStruct));
+	((struct playerStruct*)player1->object)->playerNumber = 0;
 	
-	SDL_Surface* temp = NULL; // Temporary
+	SDL_Surface* temp = NULL;
 	temp = IMG_Load("res/sansGriffin.png");
 	player1->texture = SDL_CreateTextureFromSurface(renderer, temp);
 	SDL_FreeSurface(temp);
@@ -31,9 +32,10 @@ int gameLoop(SDL_Window* screen, SDL_Renderer* renderer) {
 	pushToEntityList(player1);
 	
 	struct entity* player2 = malloc(sizeof(struct entity));
-	player2->playerNumber = 1;
+	player2->object = malloc(sizeof(struct playerStruct));
+	((struct playerStruct*)player2->object)->playerNumber = 1;
 	
-	temp = IMG_Load("./res/skeleman.bmp");
+	temp = IMG_Load("res/skeleman.png");
 	player2->texture = SDL_CreateTextureFromSurface(renderer, temp);
 	SDL_FreeSurface(temp);
 	
@@ -70,6 +72,13 @@ int gameLoop(SDL_Window* screen, SDL_Renderer* renderer) {
 		}
 		// Do stuff
 		if((*gameState)(screen, renderer, deltaTime)) {running = false;}
+	
+		// Decrement the pressed timer for each key if they're being pressed
+		for(int i = 0; i < CONTROLS_LENGTH; i++){
+			if(keys[i].pressedTimer > 0.0) {
+				keys[i].pressedTimer -= deltaTime;
+			}
+		}
 	
 		// Deltatime stuff
 		lastTime = currentTime;

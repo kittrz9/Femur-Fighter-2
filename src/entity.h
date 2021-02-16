@@ -5,20 +5,16 @@
 #include <stdbool.h>
 #include "types.h"
 
-// Really need to find a way to have like specific entities/entity types have their own variables
-// so not everything has it's own like jump counter lmao
-// Doesnt really affect this thing since the only entities (so far) are just the players
 struct entity {
 	vec2f pos, size, vel;
 	
+	// This is probably a dumb way to have entities have their own variables but whatever
+	// Probably not really even worth it to have it be like this because the only entities are the players
+	// But idk maybe I'll add like projectiles or particles later
+	// Also might add this to the SDL Project Base or whatever so I can do this stuff in later projects
+	void* object; // Pointer to the struct that is using this entity with their own variables
+	
 	SDL_Texture* texture;
-	int jumpCounter;
-	bool facingLeft; // Lmao this is a stupid way to draw flippped characters
-	int playerNumber;
-	int health;
-	float dashTimer;
-	float dashCooldown;
-	float knockbackTimer;
 	
 	void (*draw)(struct entity*, SDL_Renderer*);
 	void (*update)(struct entity*, double);

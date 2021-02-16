@@ -75,13 +75,6 @@ int runGameStatePaused(SDL_Window* screen, SDL_Renderer* renderer, float deltaTi
 	//SDL_Color SDL_Color_White = {255, 255, 255}; // This is dumb
 	drawTextCentered(renderer, "bruh", SDL_Color_White, WIDTH/2, HEIGHT/2, 80, 40);
 	
-	// Decrement the pressed timer for each key if they're being pressed
-	for(int i = 0; i < CONTROLS_LENGTH; i++){
-		if(keys[i].pressedTimer > 0.0) {
-			keys[i].pressedTimer -= deltaTime;
-		}
-	}
-	
 	// Render everything to the screen
 	SDL_RenderPresent(renderer);
 	
