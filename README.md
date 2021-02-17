@@ -42,7 +42,7 @@ I havent tested it on anything other than just my own computer with Linux so I c
 `Being able to change resolution`<br>
 `Fix "missing braces around initializer" warning when compiling`<br>
 `Fix menu confirm sometimes not being assigned a control from the config file`<br>
-`Move header files into an include directory`<br>
+`Organize stuff better`<br>
 `Maybe start using CMake instead of just regular make files`<br>
 `Make the menus look good`<br>
 `Music`<br>

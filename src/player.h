@@ -18,6 +18,7 @@ struct playerStruct{
 	float knockbackTimer;
 };
 
+struct entity* createPlayer(SDL_Renderer* renderer, char* texturePath);
 void initializePlayer(struct entity* ent);
 
 void drawPlayer(struct entity* ent, SDL_Renderer* renderer);

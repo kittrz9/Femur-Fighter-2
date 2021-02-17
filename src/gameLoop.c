@@ -1,5 +1,4 @@
 #include <SDL2/SDL.h>
-#include <SDL2/SDL_image.h>
 #include <stdbool.h>
 
 #include "gameLoop.h"
@@ -20,26 +19,8 @@ int gameLoop(SDL_Window* screen, SDL_Renderer* renderer) {
 	initControls();
 	
 	// Create entities
-	struct entity* player1 = malloc(sizeof(struct entity));
-	player1->object = malloc(sizeof(struct playerStruct));
-	((struct playerStruct*)player1->object)->playerNumber = 0;
-	
-	SDL_Surface* temp = NULL;
-	temp = IMG_Load("res/sansGriffin.png");
-	player1->texture = SDL_CreateTextureFromSurface(renderer, temp);
-	SDL_FreeSurface(temp);
-	
-	pushToEntityList(player1);
-	
-	struct entity* player2 = malloc(sizeof(struct entity));
-	player2->object = malloc(sizeof(struct playerStruct));
-	((struct playerStruct*)player2->object)->playerNumber = 1;
-	
-	temp = IMG_Load("res/skeleman.png");
-	player2->texture = SDL_CreateTextureFromSurface(renderer, temp);
-	SDL_FreeSurface(temp);
-	
-	pushToEntityList(player2);
+	struct entity* player1 = createPlayer(renderer, "res/sansGriffin.png");
+	struct entity* player2 = createPlayer(renderer, "res/skeleman.png");
 	
 	while(running){
 		// Event handling
@@ -87,8 +68,7 @@ int gameLoop(SDL_Window* screen, SDL_Renderer* renderer) {
 		// Deltatime is in milliseconds, not seconds
 		deltaTime = (double)((currentTime - lastTime)*1000 / (double)SDL_GetPerformanceFrequency());
 	}
-	removeFromEntityList(player1);
-	removeFromEntityList(player2);
+	removeEntityList();
 	
 	return 0;
 }

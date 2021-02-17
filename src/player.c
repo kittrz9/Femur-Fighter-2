@@ -1,5 +1,6 @@
 #include "player.h"
 
+#include <SDL2/SDL_image.h>
 #include <stdlib.h>
 
 #include "gameLoop.h" // Needed for WIDTH and HEIGHT for now
@@ -7,6 +8,24 @@
 #include "gameStates.h"
 
 #include "text.h"
+
+unsigned int playerCounter = 0;
+
+struct entity* createPlayer(SDL_Renderer* renderer, char* texturePath){
+	struct entity* ent = malloc(sizeof(struct entity));
+	ent->object = malloc(sizeof(struct playerStruct));
+	struct playerStruct* player = (struct playerStruct*)ent->object;
+	player->ent = ent;
+	player->playerNumber = playerCounter;
+	playerCounter++;
+	
+	SDL_Surface* surface = NULL;
+	surface = IMG_Load(texturePath);
+	ent->texture = SDL_CreateTextureFromSurface(renderer, surface);
+	
+	pushToEntityList(ent);
+	return ent;
+}
 
 void initializePlayer(struct entity* ent) {
 	struct playerStruct* player = (struct playerStruct*)ent->object;
@@ -22,10 +41,11 @@ void initializePlayer(struct entity* ent) {
 	player->jumpCounter = 1;
 	player->dashTimer = 0;
 	player->dashCooldown = 0;
-	if(player->playerNumber){
-		ent->pos.x = (3*WIDTH/4) - (ent->size.x / 2);
-	} else {
+	if(player->playerNumber == 0){
 		ent->pos.x = (WIDTH/4) - (ent->size.x / 2);
+	} else {
+		// Probably should fix this to like evenly spread each player across the screen
+		ent->pos.x = ((WIDTH/4) - (ent->size.x / 2)) + (WIDTH/(2*(player->playerNumber)));
 	}
 	ent->pos.y = HEIGHT/2;
 }

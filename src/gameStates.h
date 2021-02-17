@@ -11,5 +11,6 @@ extern bool running;
 #include "gameStates/gameStateRunning.h"
 #include "gameStates/gameStatePaused.h"
 #include "gameStates/gameStateGameOver.h"
+#include "gameStates/gameStatePaused.h"
 
 #endif

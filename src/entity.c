@@ -44,6 +44,9 @@ void removeFromEntityList(struct entity* ent){
     struct entListNode* temp;
 	for(entListCurrent = entListHead; entListCurrent != NULL;){
         if(entListHead == entListTail){
+			// idk if I actually need to free the object the entity has
+			// because I know freeing the entity list node also frees the entity it points to
+			// but idk if it does it like recursively or whatever
 			free(entListHead->ent->object);
             free(entListHead);
             return;
@@ -68,9 +71,11 @@ void removeFromEntityList(struct entity* ent){
 
 void removeEntityList(){
     struct entListNode* temp;
+	// Probably inefficient to have this loop through the entities and then list through it again in the removeFromEntityList function
     for(entListCurrent = entListHead; entListCurrent != NULL;){
         temp = entListCurrent->next;
-        free(entListCurrent);
+        //free(entListCurrent);
+		removeFromEntityList(entListCurrent->ent);
         entListCurrent = temp;
         return;
     }
