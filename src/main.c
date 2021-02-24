@@ -40,7 +40,11 @@ int main(int argc, char** argv){
 	// Main loop
 	gameLoop(screen, renderer);
 	
-	// End
+	// Free resources and end
+	// Quit SDL_ttf
+	TTF_CloseFont(font);
+	TTF_Quit();
+	// Quit SDL
 	SDL_DestroyRenderer(renderer);
 	SDL_DestroyWindow(screen);
 	SDL_Quit();
