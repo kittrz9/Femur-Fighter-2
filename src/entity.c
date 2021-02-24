@@ -71,12 +71,14 @@ void removeFromEntityList(struct entity* ent){
 
 void removeEntityList(){
     struct entListNode* temp;
-	// Probably inefficient to have this loop through the entities and then list through it again in the removeFromEntityList function
     for(entListCurrent = entListHead; entListCurrent != NULL;){
+		// Check if there's only one item left in the list
+		if(entListHead == entListTail){
+			free(entListHead);
+			return;
+		}
         temp = entListCurrent->next;
-        //free(entListCurrent);
-		removeFromEntityList(entListCurrent->ent);
+        free(entListCurrent);
         entListCurrent = temp;
-        return;
     }
 }
