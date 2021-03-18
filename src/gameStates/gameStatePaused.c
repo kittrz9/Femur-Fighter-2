@@ -67,12 +67,10 @@ int runGameStatePaused(SDL_Window* screen, SDL_Renderer* renderer, float deltaTi
 	rect.h = HEIGHT;
 	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 200);
 	SDL_RenderFillRect(renderer, &rect);
-	for(int i = 0; i < sizeof(pauseMenu)/sizeof(struct menuItem); i++){
-		sprintf(formatStr, "%s%s", (i == menuIndex ? ">" : ""), pauseMenu[i].str);
-		drawTextCentered(renderer, formatStr, SDL_Color_White, pauseMenu[i].pos.x, pauseMenu[i].pos.y, pauseMenu[i].scaling);
-	}
 	
 	drawTextCentered(renderer, "bruh", SDL_Color_White, WIDTH/2, HEIGHT/2, 2.0f);
+
+	drawMenu(renderer, pauseMenu, sizeof(pauseMenu)/sizeof(struct menuItem));
 	
 	// Render everything to the screen
 	SDL_RenderPresent(renderer);

@@ -41,9 +41,13 @@ int runGameStateChangingControl(SDL_Window* screen, SDL_Renderer* renderer, floa
 	SDL_SetRenderDrawColor(renderer,0,0,0,255);
 	SDL_RenderClear(renderer);
 	
+	//drawMenu(renderer, controlsMenu, sizeof(controlsMenu)/sizeof(struct menuItem));
+	
+	// Have to do this instead of using drawMenu to have the key at the end of the string
+	// There's probably a better solution to this but I'm very stupid
 	for(int i = 0; i < sizeof(controlsMenu)/sizeof(struct menuItem); i++){
-		sprintf(formatStr, "%s%s", (i == menuIndex ? ">" : ""), controlsMenu[i].str);
-		drawTextCentered(renderer, formatStr, SDL_Color_White, controlsMenu[i].pos.x, controlsMenu[i].pos.y, controlsMenu[i].scaling);
+		sprintf(formatStr, "%s%s", controlsMenu[i].str, (strcmp(controlsMenu[i].str, "BACK") == 0 || i == menuIndex ? "" : SDL_GetKeyName(keys[i].keycode)));
+		drawTextCentered(renderer, formatStr, (i == menuIndex ? SDL_Color_Red : SDL_Color_White), controlsMenu[i].pos.x, controlsMenu[i].pos.y, controlsMenu[i].scaling);
 	}
 	
 	SDL_Event event;
@@ -87,9 +91,12 @@ int runGameStateControlsMenu(SDL_Window* screen, SDL_Renderer* renderer, float d
 	SDL_SetRenderDrawColor(renderer,0,0,0,255);
 	SDL_RenderClear(renderer);
 	
+ 	//drawMenu(renderer, controlsMenu, sizeof(controlsMenu)/sizeof(struct menuItem));
+	// Have to do this instead of using drawMenu to have the key at the end of the string
+	// There's probably a better solution to this but I'm very stupid
 	for(int i = 0; i < sizeof(controlsMenu)/sizeof(struct menuItem); i++){
-		sprintf(formatStr, "%s%s%s", (i == menuIndex ? ">" : ""), controlsMenu[i].str, (strcmp(controlsMenu[i].str, "BACK") == 0 ? "" : SDL_GetKeyName(keys[i].keycode)));
-		drawTextCentered(renderer, formatStr, SDL_Color_White, controlsMenu[i].pos.x, controlsMenu[i].pos.y, controlsMenu[i].scaling);
+		sprintf(formatStr, "%s%s", controlsMenu[i].str, (strcmp(controlsMenu[i].str, "BACK") == 0 ? "" : SDL_GetKeyName(keys[i].keycode)));
+		drawTextCentered(renderer, formatStr, (i == menuIndex ? SDL_Color_Red : SDL_Color_White), controlsMenu[i].pos.x, controlsMenu[i].pos.y, controlsMenu[i].scaling);
 	}
 	
 	if(keys[UP].pressedTimer > 0.1 && menuIndex > 0){

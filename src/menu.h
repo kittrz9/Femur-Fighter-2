@@ -3,6 +3,8 @@
 
 #include "types.h"
 
+#include <SDL2/SDL.h>
+
 extern unsigned int menuIndex; // Index to what menu item is pointed to in either the main menu or pause menu
 
 struct menuItem{
@@ -12,5 +14,7 @@ struct menuItem{
 	vec2f pos;
 	float scaling;
 };
+
+void drawMenu(SDL_Renderer* renderer, struct menuItem* menu, size_t menuLength);
 
 #endif

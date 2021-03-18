@@ -7,6 +7,7 @@
 #define MAX_STR_LEN 256
 
 static const SDL_Color SDL_Color_White = {255, 255, 255}; // This is dumb
+static const SDL_Color SDL_Color_Red = {255, 0, 0};
 
 extern char* formatStr; // This is very dumb but I dont want to rewrite the drawText function to have formatted text right now
 
