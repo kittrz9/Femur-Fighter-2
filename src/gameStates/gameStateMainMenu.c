@@ -34,9 +34,9 @@ void mainMenuToControlsMenu(){
 }
 
 struct menuItem mainMenu[] = {
-	{"START", mainMenuStart, WIDTH/2, 5*HEIGHT/8, 200, 100},
-	{"CONTROLS", mainMenuToControlsMenu, WIDTH/2, 6*HEIGHT/8, 250, 100},
-	{"EXIT", mainMenuExit, WIDTH/2, 7*HEIGHT/8, 175, 100}
+	{"START", mainMenuStart, WIDTH/2, 5*HEIGHT/8, 2.0f},
+	{"CONTROLS", mainMenuToControlsMenu, WIDTH/2, 6*HEIGHT/8, 2.0f},
+	{"EXIT", mainMenuExit, WIDTH/2, 7*HEIGHT/8, 2.0f}
 };
 int runGameStateMainMenu(SDL_Window* screen, SDL_Renderer* renderer, float deltaTime){
 	
@@ -44,10 +44,10 @@ int runGameStateMainMenu(SDL_Window* screen, SDL_Renderer* renderer, float delta
 	SDL_SetRenderDrawColor(renderer,0,0,0,255);
 	SDL_RenderClear(renderer);
 	
-	drawTextCentered(renderer, "FEMUR FIGHTER 2", SDL_Color_White, WIDTH/2, HEIGHT/3, 400,150);
+	drawTextCentered(renderer, "FEMUR FIGHTER 2", SDL_Color_White, WIDTH/2, HEIGHT/3, 4.0f);
 	for(int i = 0; i < sizeof(mainMenu)/sizeof(struct menuItem); i++){
 		sprintf(formatStr, "%s%s", (i == menuIndex ? ">" : ""), mainMenu[i].str);
-		drawTextCentered(renderer, formatStr, SDL_Color_White, mainMenu[i].pos.x, mainMenu[i].pos.y, mainMenu[i].size.x, mainMenu[i].size.y);
+		drawTextCentered(renderer, formatStr, SDL_Color_White, mainMenu[i].pos.x, mainMenu[i].pos.y, mainMenu[i].scaling);
 	}
 	
 	if(keys[UP].pressedTimer > 0.1 && menuIndex > 0){

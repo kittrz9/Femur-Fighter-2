@@ -9,6 +9,8 @@
 
 #include "text.h"
 
+#include <math.h>
+
 unsigned int playerCounter = 0;
 
 struct entity* createPlayer(SDL_Renderer* renderer, char* texturePath){
@@ -22,6 +24,7 @@ struct entity* createPlayer(SDL_Renderer* renderer, char* texturePath){
 	SDL_Surface* surface = NULL;
 	surface = IMG_Load(texturePath);
 	ent->texture = SDL_CreateTextureFromSurface(renderer, surface);
+	SDL_FreeSurface(surface);
 	
 	pushToEntityList(ent);
 	return ent;
@@ -58,6 +61,8 @@ void drawPlayer(struct entity* ent, SDL_Renderer* renderer){
 	rect.w = ent->size.x;
 	rect.h = ent->size.y;
 	
+	float rotation = ent->vel.x * 6;
+	
 	if(ent->update == updatePlayerDashing) {
 		// Give player blue color while dashing
 		SDL_SetTextureColorMod(ent->texture, 150, 150, 255);
@@ -70,15 +75,17 @@ void drawPlayer(struct entity* ent, SDL_Renderer* renderer){
 		// Give player gray color when dead
 		SDL_SetTextureColorMod(ent->texture, 150, 150, 150);
 		SDL_SetTextureAlphaMod(ent->texture, 255);
+		
+		rotation += 90;
 	} else {
 		// Have the player have normal colors if nothing else changes it's color (Changes it back after it's changed when in other states)
 		SDL_SetTextureColorMod(ent->texture, 255, 255, 255);
 		SDL_SetTextureAlphaMod(ent->texture, 255);
 	}
-	SDL_RenderCopyEx(renderer, ent->texture, NULL, &rect, ent->vel.x * 6, NULL, (player->facingLeft ? SDL_FLIP_HORIZONTAL : SDL_FLIP_NONE));
+	SDL_RenderCopyEx(renderer, ent->texture, NULL, &rect, rotation, NULL, (player->facingLeft ? SDL_FLIP_HORIZONTAL : SDL_FLIP_NONE));
 	
 	sprintf(formatStr, "%i%%", player->health);
-	drawTextCentered(renderer, formatStr, SDL_Color_White, ent->pos.x + (ent->size.x / 2), ent->pos.y - 40, ent->size.x / 2, 30);
+	drawTextCentered(renderer, formatStr, SDL_Color_White, ent->pos.x + (ent->size.x / 2), ent->pos.y - 40, 2.0f);
 }
 
 bool playerBoundaryCheck(struct entity* ent){

@@ -16,9 +16,9 @@ void pauseMenuToMainMenu(){
 	return;
 }
 struct menuItem pauseMenu[] = {
-	{"RESUME", pauseMenuResume, WIDTH/2, 6*HEIGHT/10, 200, 50},
-	{"MAIN MENU", pauseMenuToMainMenu, WIDTH/2, 7*HEIGHT/10, 300, 50},
-	{"EXIT", mainMenuExit, WIDTH/2, 8*HEIGHT/10, 175, 50}
+	{"RESUME", pauseMenuResume, WIDTH/2, 6*HEIGHT/10, 2.0f},
+	{"MAIN MENU", pauseMenuToMainMenu, WIDTH/2, 7*HEIGHT/10, 2.0f},
+	{"EXIT", mainMenuExit, WIDTH/2, 8*HEIGHT/10, 2.0f}
 };
 
 int runGameStatePaused(SDL_Window* screen, SDL_Renderer* renderer, float deltaTime){
@@ -69,11 +69,10 @@ int runGameStatePaused(SDL_Window* screen, SDL_Renderer* renderer, float deltaTi
 	SDL_RenderFillRect(renderer, &rect);
 	for(int i = 0; i < sizeof(pauseMenu)/sizeof(struct menuItem); i++){
 		sprintf(formatStr, "%s%s", (i == menuIndex ? ">" : ""), pauseMenu[i].str);
-		drawTextCentered(renderer, formatStr, SDL_Color_White, pauseMenu[i].pos.x, pauseMenu[i].pos.y, pauseMenu[i].size.x, pauseMenu[i].size.y);
+		drawTextCentered(renderer, formatStr, SDL_Color_White, pauseMenu[i].pos.x, pauseMenu[i].pos.y, pauseMenu[i].scaling);
 	}
 	
-	//SDL_Color SDL_Color_White = {255, 255, 255}; // This is dumb
-	drawTextCentered(renderer, "bruh", SDL_Color_White, WIDTH/2, HEIGHT/2, 80, 40);
+	drawTextCentered(renderer, "bruh", SDL_Color_White, WIDTH/2, HEIGHT/2, 2.0f);
 	
 	// Render everything to the screen
 	SDL_RenderPresent(renderer);

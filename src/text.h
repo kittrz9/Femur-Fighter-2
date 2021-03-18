@@ -12,8 +12,9 @@ extern char* formatStr; // This is very dumb but I dont want to rewrite the draw
 
 extern TTF_Font* font;
 
-void drawText(SDL_Renderer* renderer, char* str, SDL_Color col, int x, int y, int w, int h);
+void drawText(SDL_Renderer* renderer, char* str, SDL_Color col, int x, int y, float scaling);
+void drawTextCentered(SDL_Renderer* renderer, char* str, SDL_Color col, int x, int y, float scaling);
 
-#define drawTextCentered(renderer, str, col, x, y, w, h) drawText(renderer, str, col, x - w/2, y - h/2, w, h)
+// #define drawTextCentered(renderer, str, col, x, y, w, h) drawText(renderer, str, col, x - w/2, y - h/2, w, h)
 
 #endif

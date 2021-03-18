@@ -8,7 +8,9 @@ extern unsigned int menuIndex; // Index to what menu item is pointed to in eithe
 struct menuItem{
 	char* str;
 	void (*func)();
-	vec2f pos, size;
+// 	vec2f pos, size;
+	vec2f pos;
+	float scaling;
 };
 
 #endif

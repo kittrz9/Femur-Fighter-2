@@ -67,6 +67,8 @@ int gameLoop(SDL_Window* screen, SDL_Renderer* renderer) {
 	
 		// Deltatime is in milliseconds, not seconds
 		deltaTime = (double)((currentTime - lastTime)*1000 / (double)SDL_GetPerformanceFrequency());
+		
+		printf("delta time: %f\r", deltaTime);
 	}
 	removeEntityList();
 	
