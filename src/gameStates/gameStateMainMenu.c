@@ -47,11 +47,19 @@ int runGameStateMainMenu(SDL_Window* screen, SDL_Renderer* renderer, float delta
 	drawTextCentered(renderer, "FEMUR FIGHTER 2", SDL_Color_White, WIDTH/2, HEIGHT/3, 4.0f);
 	drawMenu(renderer, mainMenu, sizeof(mainMenu)/sizeof(struct menuItem));
 	
-	if(keys[UP].pressedTimer > 0.1 && menuIndex > 0){
-		menuIndex--;
+	
+	if(keys[UP].pressedTimer > 0.1){
+		if(menuIndex <= 0) {
+			menuIndex = sizeof(mainMenu)/sizeof(struct menuItem) - 1;
+		} else {
+			menuIndex--;
+		}
 	}
-	if(keys[DOWN].pressedTimer > 0.1 && menuIndex < sizeof(mainMenu)/sizeof(struct menuItem)-1){
+	if(keys[DOWN].pressedTimer > 0.1){
 		menuIndex++;
+		if(menuIndex > sizeof(mainMenu)/sizeof(struct menuItem) - 1){
+			menuIndex = 0;
+		}
 	}
 	if(keys[MENU_CONFIRM].pressedTimer > 0.1){
 		(*mainMenu[menuIndex].func)();

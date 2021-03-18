@@ -99,11 +99,18 @@ int runGameStateControlsMenu(SDL_Window* screen, SDL_Renderer* renderer, float d
 		drawTextCentered(renderer, formatStr, (i == menuIndex ? SDL_Color_Red : SDL_Color_White), controlsMenu[i].pos.x, controlsMenu[i].pos.y, controlsMenu[i].scaling);
 	}
 	
-	if(keys[UP].pressedTimer > 0.1 && menuIndex > 0){
-		menuIndex--;
+	if(keys[UP].pressedTimer > 0.1){
+		if(menuIndex <= 0) {
+			menuIndex = sizeof(controlsMenu)/sizeof(struct menuItem) - 1;
+		} else {
+			menuIndex--;
+		}
 	}
-	if(keys[DOWN].pressedTimer > 0.1 && menuIndex < sizeof(controlsMenu)/sizeof(struct menuItem)-1){
+	if(keys[DOWN].pressedTimer > 0.1){
 		menuIndex++;
+		if(menuIndex > sizeof(controlsMenu)/sizeof(struct menuItem) - 1){
+			menuIndex = 0;
+		}
 	}
 	if(keys[MENU_CONFIRM].pressedTimer > 0.1){
 		(*controlsMenu[menuIndex].func)();

@@ -36,11 +36,18 @@ int runGameStatePaused(SDL_Window* screen, SDL_Renderer* renderer, float deltaTi
 	SDL_SetRenderDrawColor(renderer,0,0,0,255);
 	SDL_RenderClear(renderer);
 	
-	if(keys[UP].pressedTimer > 0.1 && menuIndex > 0){
-		menuIndex--;
+	if(keys[UP].pressedTimer > 0.1){
+		if(menuIndex <= 0) {
+			menuIndex = sizeof(pauseMenu)/sizeof(struct menuItem) - 1;
+		} else {
+			menuIndex--;
+		}
 	}
-	if(keys[DOWN].pressedTimer > 0.1 && menuIndex < sizeof(pauseMenu)/sizeof(struct menuItem)-1){
+	if(keys[DOWN].pressedTimer > 0.1){
 		menuIndex++;
+		if(menuIndex > sizeof(pauseMenu)/sizeof(struct menuItem) - 1){
+			menuIndex = 0;
+		}
 	}
 	if(keys[MENU_CONFIRM].pressedTimer > 0.1){
 		(*pauseMenu[menuIndex].func)();
