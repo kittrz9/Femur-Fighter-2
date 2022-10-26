@@ -32,21 +32,21 @@ You should just be able to install SDL2 (Using either the download at https://li
 I havent tested it on anything other than just my own computer with Linux so I can't guarentee it will work on like Windows or Mac 
 
 ## Things I should probably add
-`Sound`<br>
-`Timer`<br>
-`More attacks than just dashing`<br>
-`Optimizing stuff`<br>
-`Alternate costumes/characters?`<br>
-`Better art`<br>
-`Better controls`<br>
-`Being able to change resolution`<br>
-`Fix "missing braces around initializer" warning when compiling`<br>
-`Fix menu confirm sometimes not being assigned a control from the config file`<br>
-`Organize stuff better`<br>
-`Maybe start using CMake instead of just regular make files`<br>
-`Make the menus look good`<br>
-`Music`<br>
-`Controller support`<br>
-`Include images in the executable so you dont need the res folder`<br>
-`Online multiplayer (Never gonna happen)`<br>
-`Make the game actually good (NEVER gonna happen)`<br>
+ - Sound<br>
+ - Timer<br>
+ - More attacks than just dashing<br>
+ - Optimizing stuff<br>
+ - Alternate costumes/characters?<br>
+ - Better art<br>
+ - Better controls<br>
+ - Being able to change resolution<br>
+ - Fix "missing braces around initializer" warning when compiling<br>
+ - Fix menu confirm sometimes not being assigned a control from the config file<br>
+ - Organize stuff better<br>
+ - Maybe start using CMake instead of just regular make files<br>
+ - Make the menus look good<br>
+ - Music<br>
+ - Controller support<br>
+ - Include images in the executable so you dont need the res folder<br>
+ - Online multiplayer ~~(Never gonna happen)~~ (might actually happen lmao)<br>
+ - Make the game actually good ***(NEVER gonna happen)***<br>
