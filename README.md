@@ -28,16 +28,15 @@ Controls are configurable in the config file (~/.local/share/kittrz/FemurFighter
 ## Compiling
 You should just be able to install SDL2 (Using either the download at https://libsdl.org/download-2.0.php if you're on Windows or just whatever package manager you use in Linux) and run the makefile
 
-
 I havent tested it on anything other than just my own computer with Linux so I can't guarentee it will work on like Windows or Mac 
+
+currently you need to provide the ip of a server you want to connect to in the commandline arguments, hopefully I can change this into a menu at some point
 
 ## Things I should probably add
  - Sound<br>
  - Timer<br>
- - More attacks than just dashing<br>
  - Optimizing stuff<br>
  - Alternate costumes/characters?<br>
- - Better art<br>
  - Better controls<br>
  - Being able to change resolution<br>
  - Fix "missing braces around initializer" warning when compiling<br>
@@ -46,7 +45,6 @@ I havent tested it on anything other than just my own computer with Linux so I c
  - Make the menus look good<br>
  - Music<br>
  - Controller support<br>
- - Include images in the executable so you dont need the res folder<br>
  - Online multiplayer ~~(Never gonna happen)~~ (might actually happen lmao)<br>
  - add in local and online multiplayer menus<br>
  - Make the game actually good ***(NEVER gonna happen)***<br>
