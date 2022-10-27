@@ -19,8 +19,8 @@ int gameLoop(SDL_Window* screen, SDL_Renderer* renderer) {
 	initControls();
 	
 	// Create entities
-	struct entity* player1 = createPlayer(renderer, "res/sansGriffin.png");
-	struct entity* player2 = createPlayer(renderer, "res/skeleman.png");
+	player1 = createPlayer(renderer, "res/sansGriffin.png");
+	player2 = createPlayer(renderer, "res/skeleman.png");
 	
 	while(running){
 		// Event handling

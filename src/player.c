@@ -11,6 +11,10 @@
 
 #include <math.h>
 
+struct entity* player1;
+struct entity* player2;
+
+// why did I try to make this have support for more than 2 players lmao
 unsigned int playerCounter = 0;
 
 struct entity* createPlayer(SDL_Renderer* renderer, char* texturePath){
@@ -205,21 +209,29 @@ void updatePlayerDashing(struct entity* ent, double deltaTime){
 		player->dashCooldown = 0.6;
 	}
 	
-	
-	
-	// Probably really REALLY inneficient to loop through the list like this but I don't want to like pass the other player into the update function just for this right now
-	for(struct entListNode* current = entListHead; current != NULL; current = current->next){
-		if(ent != current->ent && current->ent->update != updatePlayerDead && checkEntityCollision(ent, current->ent)){
-			struct playerStruct* hitPlayer = (player->dashTimer < ((struct playerStruct*)current->ent->object)->dashTimer ? ent->object : current->ent->object);
-			struct playerStruct* notHitPlayer = (player->dashTimer > ((struct playerStruct*)current->ent->object)->dashTimer ? ent->object : current->ent->object);
-			givePlayerKnockback(notHitPlayer->ent, 0.5);
-			hitPlayer->ent->vel.x = notHitPlayer->ent->vel.x;
-			givePlayerKnockback(hitPlayer->ent, 0.5);
-			hitPlayer->health -= 5;
-			
-			if(hitPlayer->health <= 0) {hitPlayer->ent->update = updatePlayerDead; gameState = runGameStateGameOver; gameOverTimer = 4.0;}
-			if(notHitPlayer->health <= 0) {notHitPlayer->ent->update = updatePlayerDead; gameState = runGameStateGameOver; gameOverTimer = 4.0;}
+	struct entity* otherPlayer;
+	if(ent == player1) { otherPlayer = player2; } else { otherPlayer = player1; }
+	if(otherPlayer->update != updatePlayerDead && checkEntityCollision(ent, otherPlayer)) {
+		struct playerStruct* hitPlayer;
+		struct playerStruct* notHitPlayer;
+		if(player->dashTimer < ((struct playerStruct*)otherPlayer->object)->dashTimer) {
+			hitPlayer = player;
+			notHitPlayer = otherPlayer->object;
+		} else {
+			hitPlayer = otherPlayer->object;
+			notHitPlayer = player;
 		}
+		givePlayerKnockback(notHitPlayer->ent, 0.5);
+		hitPlayer->ent->vel.x = notHitPlayer->ent->vel.x;
+		givePlayerKnockback(hitPlayer->ent, 0.5);
+		hitPlayer->health -= 5;
+
+		if(hitPlayer->health <= 0) {
+			hitPlayer->ent->update = updatePlayerDead;
+			gameState = runGameStateGameOver;
+			gameOverTimer = 4.0;
+		}
+
 	}
 	
 	// dash cancel lmao

@@ -18,6 +18,9 @@ struct playerStruct{
 	float knockbackTimer;
 };
 
+extern struct entity* player1;
+extern struct entity* player2;
+
 struct entity* createPlayer(SDL_Renderer* renderer, char* texturePath);
 void initializePlayer(struct entity* ent);
 
