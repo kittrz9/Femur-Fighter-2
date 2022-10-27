@@ -8,8 +8,21 @@
 #include "types.h"
 #include "text.h"
 #include "config.h"
+#include "gameStates.h"
+
+#include "connection.h"
 
 int main(int argc, char** argv){
+	if(argc < 2) {
+		printf("put an ip address\n");
+		return 1;
+	}
+
+	connectedServer = connectToServer(argv[1], 42069);
+
+
+
+
 	SDL_Init(SDL_INIT_TIMER | SDL_INIT_VIDEO | SDL_INIT_EVENTS);
 	TTF_Init();
 	

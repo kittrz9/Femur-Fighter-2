@@ -5,7 +5,7 @@
 // I'll probably have functions here to do these things like serialize the game state and send that
 
 /*
- * format of each packet is "(method)/(tpl serialized args)"
+ * format of each packet is "(method)'\0'(tpl serialized args)"
  * also tick rate is probably just gonna be 60hz
  *
  * CLIENT->SERVER: "CONNECT":

@@ -1,5 +1,7 @@
 #include "gameStateMainMenu.h"
 
+#include <errno.h>
+
 #include "gameStateRunning.h"
 #include "gameStateControlsMenu.h"
 
@@ -18,9 +20,23 @@ void mainMenuStart(){
 	}
 	return;
 }
-// This is VERY stupid
+
 void mainMenuExit(){
 	running = false;
+
+	char request[] = "CLOSING/";
+
+	if(send(connectedServer.socket, request, strlen(request), 0) != strlen(request)) {
+		fprintf(stderr, "could not send request \"%s\": %i\n", request, errno);
+	} else {
+		printf("send: %s\n", request);
+	}
+
+	#define MAX_RESPONSE_LEN 4096
+	char response[MAX_RESPONSE_LEN];
+	if(recv(connectedServer.socket, response, MAX_RESPONSE_LEN, 0) < 0) {
+		fprintf(stderr, "failed to receive response: %i\n", errno);
+	}
 	return;
 }
 

@@ -43,10 +43,10 @@ I havent tested it on anything other than just my own computer with Linux so I c
  - Fix "missing braces around initializer" warning when compiling<br>
  - Fix menu confirm sometimes not being assigned a control from the config file<br>
  - Organize stuff better<br>
- - Maybe start using CMake instead of just regular make files<br>
  - Make the menus look good<br>
  - Music<br>
  - Controller support<br>
  - Include images in the executable so you dont need the res folder<br>
  - Online multiplayer ~~(Never gonna happen)~~ (might actually happen lmao)<br>
+ - add in local and online multiplayer menus<br>
  - Make the game actually good ***(NEVER gonna happen)***<br>

@@ -42,20 +42,22 @@ int main(int argc, char** argv) {
 		socklen_t addr_size = sizeof(their_addr);
 		connection c;
 		c.socket = accept(l, (struct sockaddr*)&their_addr, &addr_size);
+		printf("connected\n");
 
 		bool closing = false;
 
 		while(!closing) {
 			#define MAX_REQUEST_LEN 4096
 			char buffer[MAX_REQUEST_LEN];
-			recv(c.socket, buffer, MAX_REQUEST_LEN, 0);
+			size_t size = recv(c.socket, buffer, MAX_REQUEST_LEN, 0);
+			buffer[size] = '\0';
 
 			printf("%s\n", buffer);
 
 			#define MAX_RESPONSE_LEN 4096
 			void** response;
-			size_t size = MAX_RESPONSE_LEN;
-			if(strncmp(buffer, "CLOSING\n", strlen("CLOSING\n")) == 0) {
+			size = MAX_RESPONSE_LEN;
+			if(strncmp(buffer, "CLOSING", strlen("CLOSING")) == 0) {
 				strcpy((char*)response, "CLOSING\n");
 				printf("!!!\n");
 				closing = true;
