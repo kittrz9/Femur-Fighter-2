@@ -7,6 +7,8 @@
 #include "../gameStates.h"
 #include "../entity.h"
 
+#include "protocol.h"
+
 const float netTimerInterval = 1000.0f/60.0f; // 60hz
 
 int runGameStateRunning(SDL_Window* screen, SDL_Renderer* renderer, float deltaTime){
@@ -46,21 +48,8 @@ int runGameStateRunning(SDL_Window* screen, SDL_Renderer* renderer, float deltaT
 	netTimer += deltaTime;
 
 	if(netTimer >= netTimerInterval) {
-		netTimer = 0.0f;
-		// network stuff happens
-		char request[] = "TEST/";
-		printf("network stuff happens\n");
-		if(send(connectedServer.socket, request, strlen(request), 0) != strlen(request)) {
-			fprintf(stderr, "could not send request \"%s\": %i\n", request, errno);
-		} else {
-			printf("sent: %s\n",  request);
-		}
-
-	#define MAX_RESPONSE_LEN 4096
-		char response[MAX_RESPONSE_LEN];
-		if(recv(connectedServer.socket, response, MAX_RESPONSE_LEN, 0) < 0) {
-			fprintf(stderr, "failed to recieve response: %i\n", errno);
-		}
+		clientRequest(connectedServer, PR_MTH_CL_TEST, "stromboli", strlen("stromboli"));
+		//clientRequest(connectedServer, PR_CL_CONNECT, "\x00\x01\x02", 3);
 	}
 	
 	// Render everything to the screen

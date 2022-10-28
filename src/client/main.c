@@ -11,6 +11,7 @@
 #include "gameStates.h"
 
 #include "connection.h"
+#include "protocol.h"
 
 int main(int argc, char** argv){
 	if(argc < 2) {
@@ -52,6 +53,9 @@ int main(int argc, char** argv){
 	
 	// Main loop
 	gameLoop(screen, renderer);
+
+	// disconnect
+	clientRequest(connectedServer, PR_MTH_CL_DISCONNECT, NULL, 0);
 	
 	// Free resources and end
 	// Quit SDL_ttf

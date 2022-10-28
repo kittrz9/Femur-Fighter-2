@@ -10,6 +10,7 @@
 
 #include "gameStateStruct.h"
 #include "tpl.h"
+#include "protocol.h"
 
 const netPlayer template = {
 	.pos = {
@@ -47,7 +48,7 @@ int main(int argc, char** argv) {
 		bool closing = false;
 
 		while(!closing) {
-			#define MAX_REQUEST_LEN 4096
+			/*#define MAX_REQUEST_LEN 4096
 			char buffer[MAX_REQUEST_LEN];
 			size_t size = recv(c.socket, buffer, MAX_REQUEST_LEN, 0);
 			buffer[size] = '\0';
@@ -69,7 +70,14 @@ int main(int argc, char** argv) {
 				if(send(c.socket, response, size, 0) != size) {
 					printf("send failed: %i\n", errno);
 				}
+			}*/
+
+			PR_CLIENT_RESPONSE response = serverResponse(c);
+			if(response == PR_RSP_CL_DISCONNECT || response == PR_RSP_CL_NOTIMPLEMENTED) {
+				printf("!!!\n");
+				closing = true;
 			}
+
 
 			if(closing) {
 				close(c.socket);
