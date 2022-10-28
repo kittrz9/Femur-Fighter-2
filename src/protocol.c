@@ -10,8 +10,8 @@
 const char* clientMethodStrings[] = {
 	"CONNECT",
 	"GETSTATE",
-	"DISCONNECT",
 	"TEST",
+	"DISCONNECT",
 };
 
 const char* serverMethodStrings[] = {
@@ -19,6 +19,19 @@ const char* serverMethodStrings[] = {
 	"DISCONNECTED",
 	"TEST",
 	"HUH?",
+};
+
+// these are all the same but probably wont be in the future
+const char* clientResposneStrings[] = {
+	"TEST",
+	"DISCONNECT",
+	"NOTIMPLEMENTED",
+};
+
+const char* serverResponseStrings[] = {
+	"TEST",
+	"DISCONNECT",
+	"NOTIMPLEMENTED",
 };
 
 const char noArgs[] = "NONE";
@@ -53,7 +66,7 @@ PR_SERVER_RESPONSE clientRequest(connection c, PR_CLIENT_METHOD method, void* ar
 	request[requestLen] = '/';
 
 	printf("--SENT REQUEST--\n");
-	printBuffer(request, requestLen);
+	printBuffer(request, requestLen+1);
 
 	if(send(c.socket, request, requestLen, 0) != requestLen) {
 		fprintf(stderr, "could not send request \"%s\": %i\n", request, errno);
@@ -69,7 +82,7 @@ PR_SERVER_RESPONSE clientRequest(connection c, PR_CLIENT_METHOD method, void* ar
 	}
 	
 	printf("--RECEIVED RESPONSE--\n");
-	printBuffer(response, responseLen);
+	printBuffer(response, responseLen+1);
 
 	return PR_RSP_SV_TEST;
 }
@@ -80,35 +93,69 @@ PR_SERVER_RESPONSE clientResponse(connection c){
 	
 }
 PR_CLIENT_RESPONSE serverResponse(connection c){
-	PR_CLIENT_RESPONSE responseCode;
+	PR_CLIENT_RESPONSE responseCode = PR_RSP_CL_NOTIMPLEMENTED;
 	char request[MAX_REQUEST_LEN]; //recieved not sent
 	size_t requestSize = recv(c.socket, request, MAX_REQUEST_LEN, 0);
-	request[requestSize] = '\0';
 
 	printf("--RECEIVED REQUEST--\n");
-	printBuffer(request, requestSize);
+	printBuffer(request, requestSize+1);
 
+	PR_CLIENT_METHOD clientMethodCode;
 	char response[MAX_RESPONSE_LEN];
 	size_t responseSize;
-	if(strncmp(request, clientMethodStrings[PR_MTH_CL_TEST], strlen(clientMethodStrings[PR_MTH_CL_TEST])) == 0){
-		responseSize = requestSize;
-		memcpy(response, request, requestSize);
-		responseCode = PR_RSP_CL_TEST;
-	} else if(strncmp(request, clientMethodStrings[PR_MTH_CL_DISCONNECT], strlen(clientMethodStrings[PR_MTH_CL_DISCONNECT])) == 0){
-		responseSize = strlen("DISCONNECT//");
-		memcpy(response, "DISCONNECT//", strlen("DISCONNECT//"));
-		responseCode = PR_RSP_CL_DISCONNECT;
-	} else {
-		responseSize = strlen("NOTIMPLEMENTED//");
-		memcpy(request, "NOTIMPLEMENTED//", strlen("NOTIMPLEMENTED//"));
-		responseCode = PR_RSP_CL_NOTIMPLEMENTED;
+	char requestHead[32]; // arbitrary size
+	size_t requestHeadLen = 0; // maybe dumb to have both of these idk
+	char responseHead[32];
+	size_t responseHeadLen = 0;
+	char responseArgs[MAX_RESPONSE_LEN-32];
+	size_t responseArgsLen = 0;
+	for(size_t i = 0; i < requestSize; ++i) {
+		if(request[i] == '/') { requestHeadLen = i; break; }
+		requestHead[i] = request[i];
 	}
+	for(size_t i = 0; i < sizeof(clientMethodStrings)/sizeof(char*); ++i) {
+		if(strncmp(requestHead, clientMethodStrings[i], requestHeadLen) == 0) {
+			clientMethodCode = (PR_CLIENT_METHOD)i;
+		}
+	}
+
+	switch(clientMethodCode) {
+		case PR_MTH_CL_TEST:
+			memcpy(responseHead, requestHead, requestHeadLen);
+			responseHeadLen = requestHeadLen;
+			memcpy(responseArgs, request + requestHeadLen + 1, requestSize - requestHeadLen - 1);
+			responseArgsLen = requestSize - requestHeadLen - 1;
+			responseSize = requestSize;
+			responseCode = PR_RSP_SV_TEST;
+			break;
+		case PR_MTH_CL_DISCONNECT:
+			responseHeadLen = strlen(serverResponseStrings[PR_RSP_SV_DISCONNECT]);
+			memcpy(responseHead, serverResponseStrings[PR_RSP_SV_DISCONNECT], responseHeadLen);
+			responseArgsLen = strlen(noArgs);
+			memcpy(responseArgs, noArgs, responseArgsLen);
+			break;
+		default: // probably stupid to be repeating this code but whatever
+			responseHeadLen = strlen(serverResponseStrings[PR_RSP_SV_NOTIMPLEMENTED]);
+			memcpy(responseHead, serverResponseStrings[PR_RSP_SV_NOTIMPLEMENTED], responseHeadLen);
+			responseArgsLen = strlen(noArgs);
+			memcpy(responseArgs, noArgs, responseArgsLen);
+			break;
+	}
+
+	printBuffer(responseHead, responseHeadLen);
+	printBuffer(responseArgs, responseArgsLen);
+	memcpy(response, responseHead, responseHeadLen);
+	response[responseHeadLen] = '/';
+	memcpy(response + responseHeadLen + 1, responseArgs, responseArgsLen);
+	response[responseSize] = '/';
+	printBuffer(response, responseSize);
+	response[responseSize] = '/';
 
 	if(send(c.socket, response, responseSize, 0) != responseSize) {
 		fprintf(stderr, "could not send response \"%s\": %i\n", response, errno);
 	}
 	printf("--SENT RESPONSE--\n");
-	printBuffer(response, responseSize);
+	printBuffer(response, responseSize+1);
 
 	return responseCode;
 }
