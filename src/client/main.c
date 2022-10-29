@@ -55,6 +55,7 @@ int main(int argc, char** argv){
 	gameLoop(screen, renderer);
 
 	// disconnect
+	printf("!!!DISCONNECTING!!!\n");
 	clientRequest(connectedServer, PR_MTH_CL_DISCONNECT, NULL, 0);
 	
 	// Free resources and end

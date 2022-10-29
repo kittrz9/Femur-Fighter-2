@@ -49,6 +49,7 @@ int runGameStateRunning(SDL_Window* screen, SDL_Renderer* renderer, float deltaT
 
 	if(netTimer >= netTimerInterval) {
 		clientRequest(connectedServer, PR_MTH_CL_TEST, "stromboli", strlen("stromboli"));
+		clientRequest(connectedServer, PR_MTH_CL_GETSTATE, NULL, 0);
 		//clientRequest(connectedServer, PR_CL_CONNECT, "\x00\x01\x02", 3);
 	}
 	

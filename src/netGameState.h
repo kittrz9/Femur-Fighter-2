@@ -1,7 +1,8 @@
-#ifndef GAME_STATE_STRUCT_H
-#define GAME_STATE_STRUCT_H
+#ifndef NET_GAME_STATE_H
+#define NET_GAME_STATE_H
 
 #include <stdint.h>
+#include <stdlib.h>
 
 #include "types.h"
 
@@ -21,5 +22,13 @@ typedef struct {
 typedef struct {
 	netPlayer players[2];
 } gameStateStruct;
+
+extern gameStateStruct netGameState; // used by both the client and server source files
+
+typedef struct {
+	void* buffer;
+	size_t size;
+} serializedState;
+serializedState serializeGameState(gameStateStruct s);
 
 #endif

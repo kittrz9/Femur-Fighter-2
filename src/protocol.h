@@ -5,6 +5,9 @@
 
 #include "connection.h"
 
+#define MAX_REQUEST_LEN 4096
+#define MAX_RESPONSE_LEN 4096
+
 // idk how I'm going to make the whole protocol thing work yet, this is just a rough idea of how I might implement this
 // I'll probably have functions here to do these things like serialize the game state and send that
 
@@ -21,7 +24,8 @@
  * SERVER->CLIENT: "GETSTATE":
  * 	ARGS: none
  * 	RETURNS: "STATE/", serialized state of the game (players position, health, etc.)
- * 	NOTES: sent to both players per tick,
+ * 	NOTES: sent to both players per tick
+ * 	       need to figure out a good way to have the state in the packet since I think it can have / in it
  *
  * CLIENT->SERVER: "GETSTATE":
  * 	ARGS: none
@@ -51,6 +55,10 @@
  * 	NOTES: basically a ping command I think
  *
  */
+typedef struct {
+	char header[32];
+	char args[MAX_RESPONSE_LEN - 32];
+} packet;
 
 // maybe having two enums for protocol methods is dumb but I feel like it could help with making sure you dont do client requests from the server
 typedef enum {
@@ -71,18 +79,21 @@ typedef enum {
 	PR_RSP_SV_TEST,
 	PR_RSP_SV_DISCONNECT,
 	PR_RSP_SV_NOTIMPLEMENTED,
+	PR_RSP_SV_OK,
 } PR_SERVER_RESPONSE;
 
 typedef enum {
 	PR_RSP_CL_TEST,
 	PR_RSP_CL_DISCONNECT,
 	PR_RSP_CL_NOTIMPLEMENTED,
+	PR_RSP_CL_OK,
 } PR_CLIENT_RESPONSE;
 
 PR_SERVER_RESPONSE clientRequest(connection c, PR_CLIENT_METHOD method, void* args, size_t argsLen);
 PR_CLIENT_RESPONSE serverRequest(connection c, PR_SERVER_METHOD method, void* args, size_t argsLen);
 
-PR_SERVER_RESPONSE clientResponse(connection c);
-PR_CLIENT_RESPONSE serverResponse(connection c);
+PR_SERVER_METHOD clientResponse(connection c);
+PR_CLIENT_METHOD serverResponse(connection c);
+
 
 #endif

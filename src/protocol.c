@@ -4,8 +4,7 @@
 #include <string.h>
 #include <errno.h>
 
-#define MAX_REQUEST_LEN 4096
-#define MAX_RESPONSE_LEN 4096
+#include "netGameState.h"
 
 const char* clientMethodStrings[] = {
 	"CONNECT",
@@ -26,12 +25,14 @@ const char* clientResposneStrings[] = {
 	"TEST",
 	"DISCONNECT",
 	"NOTIMPLEMENTED",
+	"OK",
 };
 
 const char* serverResponseStrings[] = {
 	"TEST",
 	"DISCONNECT",
 	"NOTIMPLEMENTED",
+	"OK",
 };
 
 const char noArgs[] = "NONE";
@@ -54,7 +55,7 @@ PR_SERVER_RESPONSE clientRequest(connection c, PR_CLIENT_METHOD method, void* ar
 
 	size_t methodLen = strlen(clientMethodStrings[method]);
 
-	strncpy(request, clientMethodStrings[method], methodLen);
+	memcpy(request, clientMethodStrings[method], methodLen);
 	request[methodLen] = '/';
 	if(args == NULL) {
 		args = (char*)noArgs;
@@ -82,17 +83,18 @@ PR_SERVER_RESPONSE clientRequest(connection c, PR_CLIENT_METHOD method, void* ar
 	}
 	
 	printf("--RECEIVED RESPONSE--\n");
-	printBuffer(response, responseLen+1);
+	printBuffer(response, responseLen);
 
 	return PR_RSP_SV_TEST;
 }
 PR_CLIENT_RESPONSE serverRequest(connection c, PR_SERVER_METHOD method, void* args, size_t argsLen){
+	return PR_RSP_CL_TEST;
 }
 
-PR_SERVER_RESPONSE clientResponse(connection c){
-	
+PR_SERVER_METHOD clientResponse(connection c){
+	return PR_RSP_SV_TEST;
 }
-PR_CLIENT_RESPONSE serverResponse(connection c){
+PR_CLIENT_METHOD serverResponse(connection c){
 	PR_CLIENT_RESPONSE responseCode = PR_RSP_CL_NOTIMPLEMENTED;
 	char request[MAX_REQUEST_LEN]; //recieved not sent
 	size_t requestSize = recv(c.socket, request, MAX_REQUEST_LEN, 0);
@@ -100,9 +102,9 @@ PR_CLIENT_RESPONSE serverResponse(connection c){
 	printf("--RECEIVED REQUEST--\n");
 	printBuffer(request, requestSize+1);
 
-	PR_CLIENT_METHOD clientMethodCode;
+	PR_CLIENT_METHOD clientMethodCode = PR_MTH_CL_TEST;
 	char response[MAX_RESPONSE_LEN];
-	size_t responseSize;
+	size_t responseSize = 0;
 	char requestHead[32]; // arbitrary size
 	size_t requestHeadLen = 0; // maybe dumb to have both of these idk
 	char responseHead[32];
@@ -134,6 +136,14 @@ PR_CLIENT_RESPONSE serverResponse(connection c){
 			responseArgsLen = strlen(noArgs);
 			memcpy(responseArgs, noArgs, responseArgsLen);
 			break;
+		case PR_MTH_CL_GETSTATE:
+			serializedState s = serializeGameState(netGameState);
+			printBuffer(s.buffer, s.size);
+			responseHeadLen = strlen(serverResponseStrings[PR_RSP_SV_OK]);
+			memcpy(responseHead, serverResponseStrings[PR_RSP_SV_OK], responseHeadLen);
+			responseArgsLen = s.size;
+			memcpy(responseArgs, s.buffer, responseArgsLen);
+			break;
 		default: // probably stupid to be repeating this code but whatever
 			responseHeadLen = strlen(serverResponseStrings[PR_RSP_SV_NOTIMPLEMENTED]);
 			memcpy(responseHead, serverResponseStrings[PR_RSP_SV_NOTIMPLEMENTED], responseHeadLen);
@@ -142,6 +152,9 @@ PR_CLIENT_RESPONSE serverResponse(connection c){
 			break;
 	}
 
+	if(responseSize == 0) {
+		responseSize = responseHeadLen + responseArgsLen + 1;
+	}
 	printBuffer(responseHead, responseHeadLen);
 	printBuffer(responseArgs, responseArgsLen);
 	memcpy(response, responseHead, responseHeadLen);
@@ -149,13 +162,12 @@ PR_CLIENT_RESPONSE serverResponse(connection c){
 	memcpy(response + responseHeadLen + 1, responseArgs, responseArgsLen);
 	response[responseSize] = '/';
 	printBuffer(response, responseSize);
-	response[responseSize] = '/';
 
-	if(send(c.socket, response, responseSize, 0) != responseSize) {
+	if(send(c.socket, response, responseSize+1, 0) != responseSize+1) {
 		fprintf(stderr, "could not send response \"%s\": %i\n", response, errno);
 	}
 	printf("--SENT RESPONSE--\n");
 	printBuffer(response, responseSize+1);
 
-	return responseCode;
+	return clientMethodCode;
 }

@@ -8,7 +8,7 @@
 #include "connection.h"
 #include "listener.h"
 
-#include "gameStateStruct.h"
+#include "netGameState.h"
 #include "tpl.h"
 #include "protocol.h"
 
@@ -72,8 +72,9 @@ int main(int argc, char** argv) {
 				}
 			}*/
 
-			PR_CLIENT_RESPONSE response = serverResponse(c);
-			if(response == PR_RSP_CL_DISCONNECT || response == PR_RSP_CL_NOTIMPLEMENTED) {
+			PR_CLIENT_METHOD response = serverResponse(c);
+			//if(response == PR_RSP_CL_DISCONNECT || response == PR_RSP_CL_NOTIMPLEMENTED) {
+			if(response == PR_MTH_CL_DISCONNECT) {
 				printf("!!!\n");
 				closing = true;
 			}
