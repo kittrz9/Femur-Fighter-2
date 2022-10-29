@@ -58,6 +58,8 @@
 typedef struct {
 	char header[32];
 	char args[MAX_RESPONSE_LEN - 32];
+	size_t headerLen;
+	size_t argsLen;
 } packet;
 
 // maybe having two enums for protocol methods is dumb but I feel like it could help with making sure you dont do client requests from the server
@@ -95,5 +97,7 @@ PR_CLIENT_RESPONSE serverRequest(connection c, PR_SERVER_METHOD method, void* ar
 PR_SERVER_METHOD clientResponse(connection c);
 PR_CLIENT_METHOD serverResponse(connection c);
 
+packet parsePacket(char* packetStr, size_t packetLen);
+void generatePacket(packet p, char* str, size_t* size); // writes to str and size
 
 #endif

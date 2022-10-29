@@ -52,19 +52,19 @@ void printBuffer(void* buffer, size_t size) {
 
 PR_SERVER_RESPONSE clientRequest(connection c, PR_CLIENT_METHOD method, void* args, size_t argsLen){
 	char request[MAX_REQUEST_LEN];
+	size_t requestLen = 0;
 
-	size_t methodLen = strlen(clientMethodStrings[method]);
-
-	memcpy(request, clientMethodStrings[method], methodLen);
-	request[methodLen] = '/';
+	packet requestPacket;
+	memcpy(requestPacket.header, clientMethodStrings[method], strlen(clientMethodStrings[method]));
+	requestPacket.headerLen = strlen(clientMethodStrings[method]);
 	if(args == NULL) {
 		args = (char*)noArgs;
 		argsLen = strlen(noArgs);
 	}
-	memcpy(request + methodLen + 1, args, argsLen);
+	memcpy(requestPacket.args, args, argsLen);
+	requestPacket.argsLen = argsLen;
 
-	size_t requestLen = methodLen + argsLen + 1;
-	request[requestLen] = '/';
+	generatePacket(requestPacket, request, &requestLen);
 
 	printf("--SENT REQUEST--\n");
 	printBuffer(request, requestLen+1);
@@ -95,7 +95,6 @@ PR_SERVER_METHOD clientResponse(connection c){
 	return PR_RSP_SV_TEST;
 }
 PR_CLIENT_METHOD serverResponse(connection c){
-	PR_CLIENT_RESPONSE responseCode = PR_RSP_CL_NOTIMPLEMENTED;
 	char request[MAX_REQUEST_LEN]; //recieved not sent
 	size_t requestSize = recv(c.socket, request, MAX_REQUEST_LEN, 0);
 
@@ -105,62 +104,44 @@ PR_CLIENT_METHOD serverResponse(connection c){
 	PR_CLIENT_METHOD clientMethodCode = PR_MTH_CL_TEST;
 	char response[MAX_RESPONSE_LEN];
 	size_t responseSize = 0;
-	char requestHead[32]; // arbitrary size
-	size_t requestHeadLen = 0; // maybe dumb to have both of these idk
-	char responseHead[32];
-	size_t responseHeadLen = 0;
-	char responseArgs[MAX_RESPONSE_LEN-32];
-	size_t responseArgsLen = 0;
-	for(size_t i = 0; i < requestSize; ++i) {
-		if(request[i] == '/') { requestHeadLen = i; break; }
-		requestHead[i] = request[i];
-	}
+	packet requestPacket = parsePacket(request, requestSize);
 	for(size_t i = 0; i < sizeof(clientMethodStrings)/sizeof(char*); ++i) {
-		if(strncmp(requestHead, clientMethodStrings[i], requestHeadLen) == 0) {
+		if(strncmp(requestPacket.header, clientMethodStrings[i], requestPacket.headerLen) == 0) {
 			clientMethodCode = (PR_CLIENT_METHOD)i;
 		}
 	}
 
+	packet responsePacket;
 	switch(clientMethodCode) {
 		case PR_MTH_CL_TEST:
-			memcpy(responseHead, requestHead, requestHeadLen);
-			responseHeadLen = requestHeadLen;
-			memcpy(responseArgs, request + requestHeadLen + 1, requestSize - requestHeadLen - 1);
-			responseArgsLen = requestSize - requestHeadLen - 1;
-			responseSize = requestSize;
-			responseCode = PR_RSP_SV_TEST;
+			strncpy(responsePacket.header, requestPacket.header, requestPacket.headerLen);
+			strncpy(responsePacket.args, requestPacket.args, requestPacket.argsLen);
+			responsePacket.headerLen = requestPacket.headerLen;
+			responsePacket.argsLen = requestPacket.argsLen;
 			break;
 		case PR_MTH_CL_DISCONNECT:
-			responseHeadLen = strlen(serverResponseStrings[PR_RSP_SV_DISCONNECT]);
-			memcpy(responseHead, serverResponseStrings[PR_RSP_SV_DISCONNECT], responseHeadLen);
-			responseArgsLen = strlen(noArgs);
-			memcpy(responseArgs, noArgs, responseArgsLen);
+			memcpy(responsePacket.header, serverResponseStrings[PR_RSP_SV_DISCONNECT], strlen(serverResponseStrings[PR_RSP_SV_DISCONNECT]));
+			memcpy(responsePacket.args, noArgs, strlen(noArgs));
+			responsePacket.headerLen = strlen(serverResponseStrings[PR_RSP_SV_DISCONNECT]);
+			responsePacket.argsLen = strlen(noArgs);
 			break;
 		case PR_MTH_CL_GETSTATE:
 			serializedState s = serializeGameState(netGameState);
 			printBuffer(s.buffer, s.size);
-			responseHeadLen = strlen(serverResponseStrings[PR_RSP_SV_OK]);
-			memcpy(responseHead, serverResponseStrings[PR_RSP_SV_OK], responseHeadLen);
-			responseArgsLen = s.size;
-			memcpy(responseArgs, s.buffer, responseArgsLen);
+			memcpy(responsePacket.header, serverResponseStrings[PR_RSP_SV_OK], strlen(serverResponseStrings[PR_RSP_SV_OK]));
+			memcpy(responsePacket.args, s.buffer, s.size);
+			responsePacket.headerLen = strlen(serverResponseStrings[PR_RSP_SV_OK]);
+			responsePacket.argsLen = s.size;
 			break;
 		default: // probably stupid to be repeating this code but whatever
-			responseHeadLen = strlen(serverResponseStrings[PR_RSP_SV_NOTIMPLEMENTED]);
-			memcpy(responseHead, serverResponseStrings[PR_RSP_SV_NOTIMPLEMENTED], responseHeadLen);
-			responseArgsLen = strlen(noArgs);
-			memcpy(responseArgs, noArgs, responseArgsLen);
+			memcpy(responsePacket.header, serverResponseStrings[PR_RSP_SV_NOTIMPLEMENTED], strlen(serverResponseStrings[PR_RSP_SV_NOTIMPLEMENTED]));
+			memcpy(responsePacket.args, noArgs, strlen(noArgs));
+			responsePacket.headerLen = strlen(serverResponseStrings[PR_RSP_SV_NOTIMPLEMENTED]);
+			responsePacket.argsLen = strlen(noArgs);
 			break;
 	}
 
-	if(responseSize == 0) {
-		responseSize = responseHeadLen + responseArgsLen + 1;
-	}
-	printBuffer(responseHead, responseHeadLen);
-	printBuffer(responseArgs, responseArgsLen);
-	memcpy(response, responseHead, responseHeadLen);
-	response[responseHeadLen] = '/';
-	memcpy(response + responseHeadLen + 1, responseArgs, responseArgsLen);
-	response[responseSize] = '/';
+	generatePacket(responsePacket, (char*)response, &responseSize);
 	printBuffer(response, responseSize);
 
 	if(send(c.socket, response, responseSize+1, 0) != responseSize+1) {
@@ -170,4 +151,44 @@ PR_CLIENT_METHOD serverResponse(connection c){
 	printBuffer(response, responseSize+1);
 
 	return clientMethodCode;
+}
+
+packet parsePacket(char* packetStr, size_t packetLen) {
+	packet p;
+	p.headerLen = 0;
+	p.argsLen = 0;
+	size_t i;
+
+	for(i = 0; i < packetLen; ++i) {
+		if(packetStr[i] == '/') { p.headerLen = i; break; }
+		p.header[i] = packetStr[i];
+	}
+	if(p.headerLen == 0) {
+		fprintf(stderr, "failed to parse header\n");
+	}
+	for(;i < packetLen; ++i) {
+		if(packetStr[i] == '/') { p.argsLen = i; break; }
+		p.args[i] = packetStr[i];
+	}
+	if(p.argsLen == 0) {
+		fprintf(stderr, "failed to parse header\n");
+	}
+
+
+
+	return p;
+}
+
+void generatePacket(packet p, char* str, size_t* size) {
+	printf("%p\n", str);
+	memcpy(str, p.header, p.headerLen);
+	str[p.headerLen] = '/';
+	memcpy(str + p.headerLen + 1, p.args, p.argsLen);
+	*size = p.headerLen + p.argsLen + 1;
+	str[*size] = '/';
+	str[*size + 1] = '\0';
+	printf("%s\n", str);
+
+
+	return;
 }

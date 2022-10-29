@@ -34,10 +34,6 @@ const netPlayer template = {
 int main(int argc, char** argv) {
 	listener l = listenOnPort(42069);
 
-	gameStateStruct state;
-	tpl_node* tn;
-	tn = tpl_map("S(f#c#)#", &state, 9, 3, 2);
-
 	while(true) {
 		struct sockaddr_storage their_addr;
 		socklen_t addr_size = sizeof(their_addr);
